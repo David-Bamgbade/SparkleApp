@@ -24,6 +24,7 @@ public class Customer {
     private String phoneNumber;
     private String password;
     private String confirmPassword;
+    private String homeAddress;
     private String specialInstructions;
     private LocalDateTime sendAt;
     private LocalDateTime updatedAt;

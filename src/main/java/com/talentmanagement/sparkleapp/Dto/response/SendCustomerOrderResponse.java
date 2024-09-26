@@ -11,5 +11,6 @@ public class SendCustomerOrderResponse {
     private String email;
     private String phoneNumber;
     private String homeAddress;
+    private String specialInstruction;
     private String message;
 }
