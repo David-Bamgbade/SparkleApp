@@ -1,19 +1,13 @@
 package com.talentmanagement.sparkleapp.data.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
-@Setter
+import java.time.LocalDateTime;
 @Getter
-
-public class LaundererMarket {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Setter
+public class Customer {
     private Long id;
     private String firstName;
     private String lastName;
@@ -21,5 +15,8 @@ public class LaundererMarket {
     private String phoneNumber;
     private String password;
     private String confirmPassword;
-
+    private String homeAddress;
+    private String specialInstructions;
+    private LocalDateTime sendAt;
+    private LocalDateTime updatedAt;
 }
