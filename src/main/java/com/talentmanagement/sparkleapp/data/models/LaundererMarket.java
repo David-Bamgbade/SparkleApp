@@ -10,6 +10,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
+
 public class LaundererMarket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +21,11 @@ public class LaundererMarket {
     private long priceForServiceOfItem;
     private ServiceType service;
     private ItemType item;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phoneNumber;
+    private String password;
+    private String confirmPassword;
+
 }
