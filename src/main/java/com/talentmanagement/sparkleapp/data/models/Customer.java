@@ -7,6 +7,9 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Setter
 @Getter
@@ -21,5 +24,7 @@ public class Customer {
     private String phoneNumber;
     private String password;
     private String confirmPassword;
-
+    private String specialInstructions;
+    private LocalDateTime sendAt;
+    private LocalDateTime updatedAt;
 }
