@@ -18,5 +18,6 @@ public class Payment {
     private String title;
     private long orderId;
     private String paymentMethod;
+    private boolean paymentStatus;
 
 }
