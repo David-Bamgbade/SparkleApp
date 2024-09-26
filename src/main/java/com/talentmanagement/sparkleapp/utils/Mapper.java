@@ -2,8 +2,10 @@ package com.talentmanagement.sparkleapp.utils;
 
 import com.talentmanagement.sparkleapp.Dto.request.SendCustomerOrderRequest;
 import com.talentmanagement.sparkleapp.Dto.request.SignupCustomerRequest;
+import com.talentmanagement.sparkleapp.Dto.request.UpdateCustomerOrderRequest;
 import com.talentmanagement.sparkleapp.Dto.response.SendCustomerOrderResponse;
 import com.talentmanagement.sparkleapp.Dto.response.SignUpCustomerResponse;
+import com.talentmanagement.sparkleapp.Dto.response.UpdateCustomerOrderResponse;
 import com.talentmanagement.sparkleapp.data.models.Customer;
 import com.talentmanagement.sparkleapp.exception.InvalidEmailException;
 
@@ -59,6 +61,28 @@ public class Mapper {
         sendCustomerOrderResponse.setSpecialInstruction(customer.getSpecialInstructions());
         sendCustomerOrderResponse.setMessage("Just Ordered");
         return sendCustomerOrderResponse;
+    }
+
+    public static void map(UpdateCustomerOrderRequest customerOrderRequest, Customer customer) {
+        customer.setFirstName(customerOrderRequest.getFirstName());
+        customer.setLastName(customerOrderRequest.getLastName());
+        customer.setEmail(customerOrderRequest.getEmail());
+        customer.setPhoneNumber(customerOrderRequest.getPhoneNumber());
+        customer.setHomeAddress(customerOrderRequest.getHomeAddress());
+        customer.setUpdatedAt(customerOrderRequest.getUpdatedAt());
+    }
+
+
+    public static UpdateCustomerOrderResponse Mapper(Customer customer) {
+        UpdateCustomerOrderResponse customerOrderResponse = new UpdateCustomerOrderResponse();
+        customerOrderResponse.setFirstName(customer.getFirstName());
+        customerOrderResponse.setLastName(customer.getLastName());
+        customer.setEmail(customer.getEmail());
+        customerOrderResponse.setPhoneNumber(customer.getPhoneNumber());
+        customerOrderResponse.setHomeAddress(customer.getHomeAddress());
+        customerOrderResponse.setUpdatedAt(customer.getUpdatedAt());
+        customerOrderResponse.setMessage("Successfully updated");
+        return customerOrderResponse;
     }
 
 }

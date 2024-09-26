@@ -97,11 +97,31 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public UpdateCustomerOrderResponse updateOrder(UpdateCustomerOrderRequest customerOrderRequest) {
-        return null;
+        Customer customer = findCustomerByEmail(customerOrderRequest.getEmail());
+        if (isValueIsNullOrEmpty(customerOrderRequest.getFirstName())||
+                isValueIsNullOrEmpty(customerOrderRequest.getLastName())||
+                isValueIsNullOrEmpty(customerOrderRequest.getEmail())||
+                isValueIsNullOrEmpty(customerOrderRequest.getPhoneNumber())||
+                isValueIsNullOrEmpty(customerOrderRequest.getHomeAddress())||
+                isValueIsNullOrEmpty(customerOrderRequest.getSpecialInstructions())){
+            throw new EmptyFeildsException("Empty fields!! Please enter all the fields");
+        }
+        map(customerOrderRequest, customer);
+        customerRepository.save(customer);
+        return Mapper(customer);
     }
 
     @Override
     public DeleteSenderOrderResponse deleteOrder(Long id) {
+        Customer customer = findCustomerOrderById(id);
+        customerRepository.delete(customer);
+        DeleteSenderOrderResponse deleteSenderOrderResponse = new DeleteSenderOrderResponse();
+        deleteSenderOrderResponse.setMessage("Order deleted successful");
         return null;
+    }
+
+    private Customer findCustomerOrderById(Long id) {
+        return customerRepository.findById(id)
+                .orElseThrow(()-> new CustomerDoesNotExist("Can not find this customer"));
     }
 }
