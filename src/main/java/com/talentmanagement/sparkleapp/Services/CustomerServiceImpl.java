@@ -7,6 +7,7 @@ import com.talentmanagement.sparkleapp.Dto.request.SignupCustomerRequest;
 import com.talentmanagement.sparkleapp.Dto.request.UpdateCustomerOrderRequest;
 import com.talentmanagement.sparkleapp.Dto.response.*;
 import com.talentmanagement.sparkleapp.data.Repository.CustomerRepository;
+
 import com.talentmanagement.sparkleapp.data.models.Customer;
 import com.talentmanagement.sparkleapp.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private final CustomerRepository customerRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
 
     @Override
     public SignUpCustomerResponse signupCustomer(SignupCustomerRequest signupCustomerRequest) {
@@ -110,7 +109,6 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(customer);
         return Mapper(customer);
     }
-
     @Override
     public DeleteSenderOrderResponse deleteOrder(Long id) {
         Customer customer = findCustomerOrderById(id);
@@ -119,7 +117,6 @@ public class CustomerServiceImpl implements CustomerService {
         deleteSenderOrderResponse.setMessage("Order deleted successful");
         return null;
     }
-
     private Customer findCustomerOrderById(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(()-> new CustomerDoesNotExist("Can not find this customer"));
