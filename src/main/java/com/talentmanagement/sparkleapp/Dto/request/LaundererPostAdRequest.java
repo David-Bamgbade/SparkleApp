@@ -13,4 +13,7 @@ public class LaundererPostAdRequest {
     private ItemType item;
     private ServiceType service;
     private long priceOfService;
+    private ItemType itemType;
+    private long priceForServiceOfItem;
+
 }

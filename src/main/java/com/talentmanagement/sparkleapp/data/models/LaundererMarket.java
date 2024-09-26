@@ -17,6 +17,7 @@ public class LaundererMarket {
     private String companyName;
     private String companyAddress;
     private String companyPhoneNumber;
-    private String pricePerItem;
+    private long priceForServiceOfItem;
     private ServiceType service;
+    private ItemType item;
 }

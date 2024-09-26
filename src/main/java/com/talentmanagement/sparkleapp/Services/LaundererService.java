@@ -10,7 +10,7 @@ import com.talentmanagement.sparkleapp.Dto.response.LoginLaundererResponse;
 import com.talentmanagement.sparkleapp.Dto.response.SignUpLaundererResponse;
 
 public interface LaundererService {
-    SignUpLaundererResponse signUp(SignupLaundererRequest request);
+    SignUpLaundererResponse signUp(SignUpLaundererRequest request);
     LoginLaundererResponse loginLaunderer(LoginLaundererRequest request);
     LaundererReceiveResponse laundererReceivePackage(LaundererReceiveRequest request);
     LaundererSendResponse laundererSendPackage(LaundererSendRequest request);

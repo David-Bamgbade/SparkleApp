@@ -3,39 +3,86 @@ package com.talentmanagement.sparkleapp.Services;
 
 import com.talentmanagement.sparkleapp.Dto.request.*;
 import com.talentmanagement.sparkleapp.Dto.response.*;
+import com.talentmanagement.sparkleapp.data.Repository.LaundererMarketRepository;
+import com.talentmanagement.sparkleapp.data.Repository.LaundererRepository;
 import com.talentmanagement.sparkleapp.data.Repository.OrderPlacementRepository;
-import com.talentmanagement.sparkleapp.data.models.ItemType;
-import com.talentmanagement.sparkleapp.data.models.OrderPlacement;
+import com.talentmanagement.sparkleapp.data.models.*;
+import com.talentmanagement.sparkleapp.exception.LaundererAlreadyExistException;
+import com.talentmanagement.sparkleapp.exception.LaundererNotLoggedInException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LaundererServiceImpl implements LaundererService{
 
-
     @Autowired
     private OrderPlacementRepository orderPlacementRepository;
 
-    @Override
-    public SignUpLaundererResponse signUp(SignupLaundererRequest request) {
-        return null;
+    @Autowired
+    private LaundererRepository laundererRepository;
+
+    @Autowired
+    private LaundererMarketRepository laundererMarketRepository;
+
+    public SignUpLaundererResponse signUp(SignUpLaundererRequest request) {
+        validate(request);
+        findByLaundererPhoneNumber(request.getPhoneNumber());
+        SignUpLaundererResponse response = new SignUpLaundererResponse();
+        if(laundererRepository.findByEmailAndPhoneNumber(validateEmail(request.getEmail().toLowerCase()), validatePhoneNumber(request.getPhoneNumber())) == null){
+            Launderer launderer = new Launderer();
+            launderer.setFirstName(validateFirstName(request.getFirstName()).toLowerCase());
+            launderer.setLastName(validateLastName(request.getLastName()).toLowerCase());
+            launderer.setPhoneNumber(validatePhoneNumber(request.getPhoneNumber()));
+            launderer.setEmail( validateEmail(request.getEmail()).toLowerCase());
+            launderer.setPassword(validatePassword(request.getPassword()).toLowerCase());
+            launderer.setConfirmPassword(validatePassword(request.getConfirmPassword()).toLowerCase());
+            laundererRepository.save(launderer);
+        }
+        else{
+            throw new IllegalArgumentException("User already exists");
+        }
+        response.setMessage("Successfully signed up");
+        return response;
     }
 
     @Override
     public LoginLaundererResponse loginLaunderer(LoginLaundererRequest request) {
-        return null;
+        LoginLaundererResponse response = new LoginLaundererResponse();
+        Launderer launderer = laundererRepository.findByEmailAndPassword(
+                validateEmail(request.getEmail()).toLowerCase(),
+                validatePassword(request.getPassword()).toLowerCase()
+        );
+
+        if (launderer != null) {
+            response.setLoggedIn(true);
+            launderer.setLoggedIn(true);
+        } else {
+            response.setLoggedIn(false);
+            throw new RuntimeException("Invalid Email or Password");
+        }
+        return response;
     }
 
     @Override
     public LaundererReceiveResponse laundererReceivePackage(LaundererReceiveRequest request) {
-        return null;
+        LaundererReceiveResponse response = new LaundererReceiveResponse();
+        OrderPlacement order = new OrderPlacement();
+        order.setCustomerFirstName(validateFirstName(request.getFirstName()).toLowerCase());
+        order.setCustomerLastName(validateLastName(request.getLastName()).toLowerCase());
+        order.setNumberOfItems(request.getNumberOfItems());
+        order.setCustomerPhoneNumber(request.getCustomerPhoneNumber());
+        order.setCustomerAddress(request.getCustomerAddress().toLowerCase());
+        order.setService(request.getService());
+        order.setItem(request.getItem());
+        orderPlacementRepository.save(order);
+
     }
 
     @Override
     public LaundererSendResponse laundererSendPackage(LaundererSendRequest request) {
         LaundererSendResponse response = new LaundererSendResponse();
         OrderPlacement order = new OrderPlacement();
-        order.setId(order.getId());
+        long orderId = order.getOrderId();
         order.setCustomerFirstName(validateFirstName(request.getCustomerFirstName()).toLowerCase());
         order.setCustomerLastName(validateLastName(request.getCustomerLastName()).toLowerCase());
         order.setCustomerPhoneNumber(validatePhoneNumber(request.getCustomerPhoneNumber()).toLowerCase());
@@ -43,21 +90,58 @@ public class LaundererServiceImpl implements LaundererService{
         order.setTotalServicePrice(request.getTotalPrice());
         order.setPaymentStatus(request.isPaymentStatus());
         order.setNumberOfItems(request.getNumberOfItems());
+        order.setCompanyAddress(validateAddress(request.getCustomerAddress()).toLowerCase());
+        order.setCompanyName(validateInput(request.getCompanyName().toLowerCase()));
+        order.setCompanyPhoneNumber(validatePhoneNumber(request.getCustomerPhoneNumber()));
         orderPlacementRepository.save(order);
         response.setMessage("Order Sent To Rider");
+        response.setUserId(orderId);
         return response;
     }
 
     public LaundererPostAdResponse laundererPostAd(LaundererPostAdRequest request) {
-
-
-        return null;
+        SignUpLaundererRequest request1 = new SignUpLaundererRequest();
+        Launderer launderer = laundererRepository.findByEmail(request1.getEmail().toLowerCase());
+        if (launderer.isLoggedIn()) {
+            LaundererPostAdResponse response = new LaundererPostAdResponse();
+            LaundererMarket market = new LaundererMarket();
+            market.setCompanyName(validateInput(request.getCompanyName()).toLowerCase());
+            market.setItem(request.getItem());
+            market.setService(request.getService());
+            market.setPriceForServiceOfItem(request.getPriceForServiceOfItem());
+            market.setCompanyAddress(validateAddress(request.getCompanyAddress()).toLowerCase());
+            laundererMarketRepository.save(market);
+            response.setMessage("Ad posted successfully");
+            return response;
+        }
+        else{
+            throw new LaundererNotLoggedInException("Invalid Email or Password Not Logged In");
+        }
     }
 
 
 
 
+    private void validate(SignUpLaundererRequest request) {
+        if (laundererRepository.findByEmail(request.getEmail().toLowerCase()) != null) {
+            throw new LaundererAlreadyExistException("Launderer with this email already exists");
+        }
+        if (laundererRepository.findByPhoneNumber(request.getPhoneNumber()) != null) {
+            throw new LaundererAlreadyExistException("Launderer with this phone number already exists");
+        }
+        if (!request.getPassword().equals(request.getConfirmPassword().toLowerCase())) {
+            throw new LaundererAlreadyExistException("Passwords do not match");
+        }
+    }
 
+
+    private void findByLaundererPhoneNumber(String phoneNumber) {
+        for(Launderer launderer : laundererRepository.findAll()){
+            if(launderer.getPhoneNumber().equals(phoneNumber)){
+                throw new LaundererAlreadyExistException("Launderer phone number already exists");
+            }
+        }
+    }
 
     private String validateFirstName(String firstName) {
         if (firstName.contains(" ")) {

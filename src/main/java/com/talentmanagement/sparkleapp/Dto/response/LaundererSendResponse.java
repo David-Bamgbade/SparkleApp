@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class LaundererSendResponse {
     private String message;
+    private long userId;
 }
 

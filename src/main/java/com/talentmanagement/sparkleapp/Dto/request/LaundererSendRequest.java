@@ -13,6 +13,8 @@ public class LaundererSendRequest {
     private String customerLastName;
     private String customerPhoneNumber;
     private String customerAddress;
+    private String companyName;
+    private String companyNumber;
     private String nameOfItems;
     private int NumberOfItems;
     private long totalPrice;

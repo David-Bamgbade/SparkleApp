@@ -6,5 +6,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class LaundererReceiveResponse {
+    private long laundererReceiveId;
+
+
 
 }

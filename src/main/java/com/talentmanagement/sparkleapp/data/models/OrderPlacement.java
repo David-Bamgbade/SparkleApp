@@ -27,4 +27,8 @@ public class OrderPlacement {
     private ServiceType service;
     @Enumerated(EnumType.STRING)
     private ItemType item;
+    private long orderId;
+    private String companyAddress;
+    private String companyName;
+    private String companyPhoneNumber;
 }
