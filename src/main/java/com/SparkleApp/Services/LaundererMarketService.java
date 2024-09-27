@@ -1,10 +1,14 @@
 package com.SparkleApp.Services;
 
+import com.SparkleApp.Dto.request.CreateLaundryMarketPostRequest;
+import com.SparkleApp.Dto.request.UpdateLaundryMarketPostRequest;
+import com.SparkleApp.Dto.response.CreateLaundryMarketPostResponse;
+import com.SparkleApp.Dto.response.UpdateLaundryMarketPostResponse;
 
-import com.SparkleApp.data.models.Launderer;
-import org.springframework.data.jpa.repository.JpaRepository;
+public interface LaundererMarketService{
 
-public interface LaundererMarketService extends JpaRepository<Launderer, Long> {
+    CreateLaundryMarketPostResponse createPost(CreateLaundryMarketPostRequest laundererMarketRequest);
 
+    UpdateLaundryMarketPostResponse updatePost(UpdateLaundryMarketPostRequest laundererMarketPostRequest);
 
 }

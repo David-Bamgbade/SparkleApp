@@ -1,12 +1,15 @@
 package com.SparkleApp.utils;
 
+import com.SparkleApp.Dto.request.CreateLaundryMarketPostRequest;
 import com.SparkleApp.Dto.request.SendCustomerOrderRequest;
 import com.SparkleApp.Dto.request.SignupCustomerRequest;
 import com.SparkleApp.Dto.request.UpdateCustomerOrderRequest;
+import com.SparkleApp.Dto.response.CreateLaundryMarketPostResponse;
 import com.SparkleApp.Dto.response.SendCustomerOrderResponse;
 import com.SparkleApp.Dto.response.SignUpCustomerResponse;
 import com.SparkleApp.Dto.response.UpdateCustomerOrderResponse;
 import com.SparkleApp.data.models.Customer;
+import com.SparkleApp.data.models.LaundryMarket;
 import com.SparkleApp.exception.InvalidEmailException;
 
 public class Mapper {
@@ -72,7 +75,6 @@ public class Mapper {
         customer.setUpdatedAt(customerOrderRequest.getUpdatedAt());
     }
 
-
     public static UpdateCustomerOrderResponse Mapper(Customer customer) {
         UpdateCustomerOrderResponse customerOrderResponse = new UpdateCustomerOrderResponse();
         customerOrderResponse.setFirstName(customer.getFirstName());
@@ -83,6 +85,31 @@ public class Mapper {
         customerOrderResponse.setUpdatedAt(customer.getUpdatedAt());
         customerOrderResponse.setMessage("Successfully updated");
         return customerOrderResponse;
+    }
+
+    public static void postMap(CreateLaundryMarketPostRequest laundererMarketRequest, LaundryMarket laundryMarket) {
+        laundryMarket.setServiceName(laundererMarketRequest.getServiceName());
+        laundryMarket.setServiceDescription(laundererMarketRequest.getServiceDescription());
+        laundryMarket.setPriceForServiceOfItem(laundererMarketRequest.getPriceForServiceOfItem());
+        laundryMarket.setService(laundererMarketRequest.getService().WASH_AND_IRON);
+        laundryMarket.setItem(laundererMarketRequest.getItem().UNDER_WEAR);
+        laundryMarket.setCompanyName(laundererMarketRequest.getCompanyName());
+        laundryMarket.setCompanyAddress(laundererMarketRequest.getCompanyName());
+        laundryMarket.setCompanyPhoneNumber(laundererMarketRequest.getCompanyPhoneNumber());
+    }
+
+    public static CreateLaundryMarketPostResponse postMapResponse(LaundryMarket laundryMarket) {
+        CreateLaundryMarketPostResponse createLaundryMarketPostResponse = new CreateLaundryMarketPostResponse();
+        createLaundryMarketPostResponse.setServiceName(laundryMarket.getServiceName());
+        createLaundryMarketPostResponse.setServiceDescription(laundryMarket.getServiceDescription());
+        createLaundryMarketPostResponse.setPriceForServiceOfItem(laundryMarket.getPriceForServiceOfItem());
+        createLaundryMarketPostResponse.setService(laundryMarket.getService().WASH_AND_IRON);
+        createLaundryMarketPostResponse.setItem(laundryMarket.getItem().UNDER_WEAR);
+        createLaundryMarketPostResponse.setCompanyName(laundryMarket.getCompanyName());
+        createLaundryMarketPostResponse.setCompanyPhoneNumber(laundryMarket.getCompanyPhoneNumber());
+        createLaundryMarketPostResponse.setCompanyAddress(laundryMarket.getCompanyAddress());
+        createLaundryMarketPostResponse.setMessage("Posted successfully");
+        return createLaundryMarketPostResponse;
     }
 
 }

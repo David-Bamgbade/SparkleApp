@@ -9,6 +9,7 @@ import com.SparkleApp.Dto.response.*;
 import com.SparkleApp.data.Repository.CustomerRepository;
 import com.SparkleApp.data.models.Customer;
 import com.SparkleApp.exception.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-
     @Override
     public SignUpCustomerResponse signupCustomer(SignupCustomerRequest signupCustomerRequest) {
+        validateEmail(signupCustomerRequest.getEmail());
         Customer customer = new Customer();
         signupCustomerMapper(signupCustomerRequest, customer);
         if (isValueIsNullOrEmpty(signupCustomerRequest.getFirstName())||
@@ -41,12 +42,17 @@ public class CustomerServiceImpl implements CustomerService {
         if (!(customer.getConfirmPassword() == customer.getPassword())){
             throw new UnMatchablePasswordException("Password mismatch");
         }
-        customer.setPassword(passwordEncoder.encode((CharSequence) signupCustomerRequest));
+        customer.setPassword(passwordEncoder.encode(signupCustomerRequest));
         customer = customerRepository.save(customer);
         return signUpCustomerResponseMapper(customer);
     }
-
-
+    private void validateEmail(String email) {
+        for (Customer customerEmail: customerRepository.findAll()) {
+            if (customerEmail.getEmail() == email) {
+                throw new EmailAlreadyExistException("Customer already exist");
+            }
+        }
+    }
     private boolean isValueIsNullOrEmpty(String value) {
         return value == null  || value.trim().isEmpty();
     }
@@ -55,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
     public LoginCustomerResponse loginCustomer(LoginCustomerRequest loginCustomerRequest) {
         Customer customer = findCustomerByEmail(loginCustomerRequest.getEmail());
         customer.setPassword(loginCustomerRequest.getPassword());
-        validatePassword(customer, loginCustomerRequest.getPassword());
+        validatePassword(customer,loginCustomerRequest.getPassword());
         customerRepository.save(customer);
         LoginCustomerResponse loginCustomerResponse = new LoginCustomerResponse();
         loginCustomerResponse.setLoggedIn(true);
@@ -63,15 +69,15 @@ public class CustomerServiceImpl implements CustomerService {
         return loginCustomerResponse;
     }
 
-    private void validatePassword(Customer customer, String password) {
-        if (!passwordEncoder.matches(customer.getPassword(), password)){
-            throw new WrongPasswordException("Wrong password or email");
-        }
+    private Customer findCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email)
+                .orElseThrow(()-> new CustomerDoesNotExist("Customer does not exist"));
     }
 
-    private Customer findCustomerByEmail(String email) {
-        return customerRepository.existsByEmail(email)
-                .orElseThrow(()-> new CustomerDoesNotExist("Customer does not exist"));
+    private void validatePassword(Customer customer, String password) {
+        if (!passwordEncoder.matches(customer.getPassword(),password)){
+            throw new WrongPasswordException("Wrong password or email");
+        }
     }
 
     @Override
@@ -93,7 +99,6 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(customer);
         return getSendCustomerOrderResponse(customer);
     }
-
     @Override
     public UpdateCustomerOrderResponse updateOrder(UpdateCustomerOrderRequest customerOrderRequest) {
         Customer customer = findCustomerByEmail(customerOrderRequest.getEmail());
@@ -115,7 +120,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.delete(customer);
         DeleteSenderOrderResponse deleteSenderOrderResponse = new DeleteSenderOrderResponse();
         deleteSenderOrderResponse.setMessage("Order deleted successful");
-        return null;
+        return deleteSenderOrderResponse;
     }
     private Customer findCustomerOrderById(Long id) {
         return customerRepository.findById(id)
