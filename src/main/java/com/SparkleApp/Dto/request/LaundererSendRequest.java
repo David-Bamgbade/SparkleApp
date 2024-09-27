@@ -1,6 +1,7 @@
 package com.SparkleApp.Dto.request;
 
 import com.SparkleApp.data.models.ItemType;
+import com.SparkleApp.data.models.Payment;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
@@ -16,10 +17,9 @@ public class LaundererSendRequest {
     private String companyName;
     private String companyNumber;
     private String nameOfItems;
-    private int NumberOfItems;
     private long totalPrice;
     private boolean paymentStatus;
-    @Enumerated(EnumType.ORDINAL)
-    private ItemType itemType;
+    private int numberOfItems;
+    private Payment customerPayment;
 
 }
