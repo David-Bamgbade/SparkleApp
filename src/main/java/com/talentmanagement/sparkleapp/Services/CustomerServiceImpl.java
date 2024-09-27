@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.talentmanagement.sparkleapp.utils.Mapper.*;
 
 @Service
@@ -54,6 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public LoginCustomerResponse loginCustomer(LoginCustomerRequest loginCustomerRequest) {
         Customer customer = findCustomerByEmail(loginCustomerRequest.getEmail());
+        customer.setEmail(loginCustomerRequest.getEmail());
         customer.setPassword(loginCustomerRequest.getPassword());
         validatePassword(customer, loginCustomerRequest.getPassword());
         customerRepository.save(customer);
@@ -115,10 +118,38 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.delete(customer);
         DeleteSenderOrderResponse deleteSenderOrderResponse = new DeleteSenderOrderResponse();
         deleteSenderOrderResponse.setMessage("Order deleted successful");
+        return deleteSenderOrderResponse;
+    }
+
+    @Override
+    public LogoutCustomerResponse logout(String email) {
+        Customer customer = findCustomerByEmail(email);
+        customerRepository.save(customer);
+        LogoutCustomerResponse logoutCustomerResponse = new LogoutCustomerResponse();
+        logoutCustomerResponse.setMessage("Logged out successfully");
+
         return null;
     }
+
+    @Override
+    public List<Customer> allCustomer() {
+        return customerRepository.findAll();
+    }
+
+    @Override
+    public List<Customer> searchCustomerByFirstName(String firstName) {
+        return customerRepository.findCustomerByFirstName(firstName);
+    }
+
+    @Override
+    public List<Customer> searchCustomerByLastName(String lastName) {
+        return customerRepository.findCustomerByLastName(lastName);
+    }
+
     private Customer findCustomerOrderById(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(()-> new CustomerDoesNotExist("Can not find this customer"));
     }
+
+
 }

@@ -17,6 +17,7 @@ public class Customer {
     private String confirmPassword;
     private String homeAddress;
     private String specialInstructions;
+    private boolean isLoggedIn;
     private LocalDateTime sendAt;
     private LocalDateTime updatedAt;
 }

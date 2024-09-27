@@ -2,6 +2,9 @@ package com.talentmanagement.sparkleapp.Services;
 
 import com.talentmanagement.sparkleapp.Dto.request.*;
 import com.talentmanagement.sparkleapp.Dto.response.*;
+import com.talentmanagement.sparkleapp.data.models.Customer;
+
+import java.util.List;
 
 public interface CustomerService {
 
@@ -14,5 +17,13 @@ public interface CustomerService {
     UpdateCustomerOrderResponse updateOrder(UpdateCustomerOrderRequest customerOrderRequest);
 
     DeleteSenderOrderResponse deleteOrder(Long id );
+
+    LogoutCustomerResponse logout(String email);
+
+    List<Customer> allCustomer();
+
+    List<Customer> searchCustomerByFirstName(String firstName);
+
+    List<Customer> searchCustomerByLastName(String lastName);
 
 }
