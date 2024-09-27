@@ -10,5 +10,6 @@ public interface LaundererRepository extends JpaRepository<Launderer, Long> {
     Launderer findByEmailAndPhoneNumber(String email, String phoneNumber);
     Launderer findByEmail(String email);
     Launderer findByPhoneNumber(String phoneNumber);
+    boolean existsByPhoneNumber(String phoneNumber);
 
 }

@@ -27,14 +27,14 @@ public class LaundererServiceImpl implements LaundererService{
 
     public SignUpLaundererResponse signUp(SignUpLaundererRequest request) {
         validate(request);
-        findByLaundererPhoneNumber(request.getPhoneNumber());
         SignUpLaundererResponse response = new SignUpLaundererResponse();
         if(laundererRepository.findByEmailAndPhoneNumber(validateEmail(request.getEmail().toLowerCase()), validatePhoneNumber(request.getPhoneNumber())) == null){
             Launderer launderer = new Launderer();
             launderer.setFirstName(validateFirstName(request.getFirstName()).toLowerCase());
             launderer.setLastName(validateLastName(request.getLastName()).toLowerCase());
-            launderer.setPhoneNumber(validatePhoneNumber(request.getPhoneNumber()));
-            launderer.setEmail( validateEmail(request.getEmail()).toLowerCase());
+            launderer.setPhoneNumber(validatePhoneNumber(verifyPhoneNumber(request.getPhoneNumber())));
+            launderer.setLoggedIn(false);
+            launderer.setEmail(validateEmail(request.getEmail()).toLowerCase());
             launderer.setPassword(validatePassword(request.getPassword()).toLowerCase());
             launderer.setConfirmPassword(validatePassword(request.getConfirmPassword()).toLowerCase());
             laundererRepository.save(launderer);
@@ -53,7 +53,6 @@ public class LaundererServiceImpl implements LaundererService{
                 validateEmail(request.getEmail()).toLowerCase(),
                 validatePassword(request.getPassword()).toLowerCase()
         );
-
         if (launderer != null) {
             response.setLoggedIn(true);
             launderer.setLoggedIn(true);
@@ -107,9 +106,7 @@ public class LaundererServiceImpl implements LaundererService{
         if (launderer.isLoggedIn()) {
             LaundererPostAdResponse response = new LaundererPostAdResponse();
             LaundererMarket market = new LaundererMarket();
-            market.setCompanyName(validateInput(request.getCompanyName()).toLowerCase());
-//            market.setItem(request.getItem());
-//            market.setService(request.getService());
+            market.setCompanyName(validateInput(findByLaundererPhoneNumber(request.getCompanyName())).toLowerCase());
             market.setPriceForServiceOfItem(request.getPriceForServiceOfItem());
             market.setCompanyAddress(validateAddress(request.getCompanyAddress()).toLowerCase());
             laundererMarketRepository.save(market);
@@ -120,9 +117,6 @@ public class LaundererServiceImpl implements LaundererService{
             throw new LaundererNotLoggedInException("Invalid Email or Password Not Logged In");
         }
     }
-
-
-
 
     private void validate(SignUpLaundererRequest request) {
         if (laundererRepository.findByEmail(request.getEmail().toLowerCase()) != null) {
@@ -136,13 +130,20 @@ public class LaundererServiceImpl implements LaundererService{
         }
     }
 
+    private String verifyPhoneNumber(String phoneNumber) {
+        if (laundererRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new LaundererAlreadyExistException("Phone number already exists");
+        }
+        return phoneNumber;
+    }
 
-    private void findByLaundererPhoneNumber(String phoneNumber) {
+    private String findByLaundererPhoneNumber(String phoneNumber) {
         for(Launderer launderer : laundererRepository.findAll()){
             if(launderer.getPhoneNumber().equals(phoneNumber)){
                 throw new LaundererAlreadyExistException("Launderer phone number already exists");
             }
         }
+        return phoneNumber;
     }
 
     private String validateFirstName(String firstName) {
