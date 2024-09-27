@@ -110,6 +110,8 @@ public class CustomerServiceImpl implements CustomerService {
                 isValueIsNullOrEmpty(customerOrderRequest.getSpecialInstructions())){
             throw new EmptyFeildsException("Empty fields!! Please enter all the fields");
         }
+        if (!(customerOrderRequest.getEmail().contains("@"))||
+                customerOrderRequest.getEmail().contains(">"))throw new InvalidEmailException("Invalid email");
         map(customerOrderRequest, customer);
         customerRepository.save(customer);
         return Mapper(customer);
