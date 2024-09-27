@@ -58,7 +58,6 @@ class CustomerServiceTest {
         LoginCustomerResponse loginCustomerResponse = customerService.loginCustomer(loginCustomerRequest);
         assertThat(loginCustomerResponse).isNotNull();
         assertThat(loginCustomerResponse.getMessage()).contains("Login successfully");
-
     }
 
     @Test
@@ -83,6 +82,7 @@ class CustomerServiceTest {
     @Test
     public void testThatCustomerUpdateOrder(){
         UpdateCustomerOrderRequest updateCustomerOrderRequest = new UpdateCustomerOrderRequest();
+
 
     }
 }

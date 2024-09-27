@@ -1,6 +1,5 @@
 package com.SparkleApp.data.models;
 
-import java.math.BigDecimal;
 
 import lombok.Getter;
 
