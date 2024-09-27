@@ -82,6 +82,6 @@ public class CustomerController {
             return new ResponseEntity<>(new CustomerApiResponse(false, exception.getMessage()),
                     HttpStatus.BAD_REQUEST);
         }
-
     }
+
 }
