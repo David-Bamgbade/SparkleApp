@@ -34,24 +34,22 @@ public class LaundererServiceImpl implements LaundererService{
         Launderer launderer = laundererRepository.findByEmailAndPhoneNumber(validateEmail(request.getEmail().toLowerCase()), validatePhoneNumber(request.getPhoneNumber()));
             if (launderer == null) {
                 Launderer launderer1 = new Launderer();
-                launderer1.setFirstName(String.valueOf(validateFirstName(request.getFirstName()).toLowerCase()));
+                launderer1.setFirstName((validateFirstName(request.getFirstName()).toLowerCase()));
                 launderer1.setLastName(validateLastName(request.getLastName()).toLowerCase());
                 launderer1.setPhoneNumber(validatePhoneNumber(verifyPhoneNumber(request.getPhoneNumber())));
-                launderer1.setLoggedIn(true);
+                launderer1.setLoggedIn(false);
                 launderer1.setEmail(validateEmail(request.getEmail()).toLowerCase());
                 launderer1.setPassword(validatePassword(request.getPassword()).toLowerCase());
-                launderer1.setConfirmPassword(validatePassword(validateConfirmPassword(request.getConfirmPassword())).toLowerCase());
+                launderer1.setConfirmPassword(validatePassword(request.getConfirmPassword()).toLowerCase());
                 launderer1.setCreatedAt(LocalDateTime.now());
                 laundererRepository.save(launderer1);
             } else {
                 throw new IllegalArgumentException("User already exists");
             }
-
         response.setMessage("Successfully signed up");
         response.setCreatedAt(LocalDateTime.now());
         return response;
     }
-
 
     @Override
     public LoginLaundererResponse loginLaunderer(LoginLaundererRequest request) {
@@ -92,13 +90,24 @@ public class LaundererServiceImpl implements LaundererService{
 
     private String validateConfirmPassword(String confirmPassword){
         Launderer launderer = laundererRepository.findByPassword(validatePassword(confirmPassword));
-        if(launderer.getConfirmPassword() != launderer.getPassword()){
+        if(!launderer.getPassword().equals(confirmPassword)){
             throw new IllegalArgumentException("Password mismatch");
         }
         else {
             return confirmPassword;
         }
     }
+
+    private String isExists (String email) {
+        Launderer launderer = laundererRepository.findByEmail(email);
+            if (launderer == null) {
+                throw new RuntimeException("Launderer not found");
+            }
+            else {
+                return launderer.getPassword();
+            }
+        }
+
 
     @Override
     public LaundererSendResponse laundererSendPackage(LaundererSendRequest request) {
@@ -145,7 +154,7 @@ public class LaundererServiceImpl implements LaundererService{
             market.setCreatedAt(LocalDateTime.now());
             market.setServiceDescription(request.getServiceDescription().toLowerCase());
             market.setNameOfItem(validateInput(request.getNameOfItem()).toLowerCase());
-            market.setCompanyPhoneNumber(validatePhoneNumber(request.getCompanyPhoneNumber()));
+            market.setCompanyPhoneNumber(request.getCompanyPhoneNumber());
             laundererMarketRepository.save(market);
             response.setMessage("Ad posted successfully");
             response.setImageLink(market.getImageLink());
@@ -155,12 +164,38 @@ public class LaundererServiceImpl implements LaundererService{
             response.setPriceOfItem(market.getPriceOfItem());
             response.setServiceDescription(validateAddress(market.getServiceDescription()).toLowerCase());
             response.setNameOfItem(validateInput(market.getNameOfItem()).toLowerCase());
-            response.setCompanyPhoneNumber(validatePhoneNumber(market.getCompanyPhoneNumber()));
+            response.setCompanyPhoneNumber(validateAddress(market.getCompanyPhoneNumber()));
             return response;
         }
         else{
             throw new LaundererNotLoggedInException("Invalid Email or Password Not Logged In");
         }
+    }
+
+   public LaundererDeletePostResponse laundererDeletePost(VerifyEmailRequest request2, CompanyNameRequestOnly companyName){
+     LaundererDeletePostResponse response = new LaundererDeletePostResponse();
+       Launderer launderer = laundererRepository.findByEmail(request2.getEmail().toLowerCase());
+       if (launderer.getLoggedIn()) {
+           LaundryMarket market = laundererMarketRepository.findLaundryMarketByCompanyName(validateAddress(companyName.getCompanyName()).toLowerCase());
+           laundererMarketRepository.delete(market);
+       }
+       response.setMessage("Post Deleted");
+     return response;
+    }
+
+    public boolean logoutLaunderer(LaundererLogoutRequest logoutRequest){
+            LogoutLaundererResponse response = new LogoutLaundererResponse();
+            Launderer launderer = laundererRepository.findByEmailAndPassword(validateEmail(logoutRequest.getEmail()).toLowerCase(), validateConfirmPassword(logoutRequest.getPassword()).toLowerCase());
+            if(launderer != null){
+                launderer.setLoggedIn(false);
+                logoutRequest.setLoggedIn(logoutRequest.getLoggedIn());
+                response.setLoggedIn(false);
+                laundererRepository.save(launderer);
+            }
+            else {
+                throw new IllegalArgumentException("Invalid email or password");
+            }
+            return response.isLoggedIn();
     }
 
     private void validate(SignUpLaundererRequest request) {
