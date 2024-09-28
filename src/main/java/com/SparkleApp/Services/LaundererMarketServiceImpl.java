@@ -5,7 +5,6 @@ import com.SparkleApp.Dto.request.UpdateLaundryMarketPostRequest;
 import com.SparkleApp.Dto.response.CreateLaundryMarketPostResponse;
 import com.SparkleApp.Dto.response.DeleteLaundryMarketPostResponse;
 import com.SparkleApp.Dto.response.UpdateLaundryMarketPostResponse;
-import com.SparkleApp.data.Repository.CustomerRepository;
 import com.SparkleApp.data.Repository.LaundererMarketRepository;
 import com.SparkleApp.data.models.LaundryMarket;
 import com.SparkleApp.data.models.ServiceType;
@@ -44,7 +43,6 @@ public class LaundererMarketServiceImpl implements  LaundererMarketService{
         }
 
     }
-
     private void validateLaundryMarketPostCompanyPhoneNumber(String companyPhoneNumber) {
         boolean isPhoneNumberExist = laundererMarketRepository.existsByCompanyPhoneNumber(companyPhoneNumber);
         if (isPhoneNumberExist)throw new CompanyPhoneNumberException("This company phone number already exist");
@@ -123,6 +121,4 @@ public class LaundererMarketServiceImpl implements  LaundererMarketService{
         laundryMarket.setCompanyPhoneNumber(laundererMarketPostRequest.getCompanyPhoneNumber());
         return laundryMarket;
     }
-
-
 }
