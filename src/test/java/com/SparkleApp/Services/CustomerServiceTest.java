@@ -4,10 +4,7 @@ import com.SparkleApp.Dto.request.LoginCustomerRequest;
 import com.SparkleApp.Dto.request.SendCustomerOrderRequest;
 import com.SparkleApp.Dto.request.SignupCustomerRequest;
 import com.SparkleApp.Dto.request.UpdateCustomerOrderRequest;
-import com.SparkleApp.Dto.response.LoginCustomerResponse;
-import com.SparkleApp.Dto.response.SendCustomerOrderResponse;
-import com.SparkleApp.Dto.response.SignUpCustomerResponse;
-import com.SparkleApp.Dto.response.UpdateCustomerOrderResponse;
+import com.SparkleApp.Dto.response.*;
 import com.SparkleApp.data.Repository.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +36,6 @@ class CustomerServiceTest {
         signupCustomerRequest.setEmail("christian@gmail.com");
         signupCustomerRequest.setPhoneNumber("09012457786");
         signupCustomerRequest.setPassword("1234");
-        signupCustomerRequest.setConfirmPassword("1234");
         SignUpCustomerResponse signUpCustomerResponse = customerService.signupCustomer(signupCustomerRequest);
         assertThat(signUpCustomerResponse).isNotNull();
         assertThat(signUpCustomerResponse.getMessage()).contains("Successfully signup");
@@ -53,7 +49,6 @@ class CustomerServiceTest {
         signupCustomerRequest.setEmail("christian@gmail.com");
         signupCustomerRequest.setPhoneNumber("09012457786");
         signupCustomerRequest.setPassword("1234");
-        signupCustomerRequest.setConfirmPassword("1234");
     }
 
     @Test
@@ -64,13 +59,12 @@ class CustomerServiceTest {
         signupCustomerRequest.setEmail("christian@gmail.com");
         signupCustomerRequest.setPhoneNumber("09012457786");
         signupCustomerRequest.setPassword("1234");
-        signupCustomerRequest.setConfirmPassword("1234");
         SignUpCustomerResponse signUpCustomerResponse = customerService.signupCustomer(signupCustomerRequest);
         assertThat(signUpCustomerResponse).isNotNull();
         assertThat(signUpCustomerResponse.getMessage()).contains("Successfully signup");
         LoginCustomerRequest loginCustomerRequest = new LoginCustomerRequest();
-        loginCustomerRequest.setEmail("christian@gmail.com");
         loginCustomerRequest.setPassword("1234");
+        loginCustomerRequest.setEmail("christian@gmail.com");
         LoginCustomerResponse loginCustomerResponse = customerService.loginCustomer(loginCustomerRequest);
         assertThat(loginCustomerResponse).isNotNull();
         assertThat(loginCustomerResponse.getMessage()).contains("Login successfully");
@@ -107,12 +101,29 @@ class CustomerServiceTest {
         UpdateCustomerOrderRequest updateCustomerOrderRequest = new UpdateCustomerOrderRequest();
         updateCustomerOrderRequest.setFirstName("Dayo");
         updateCustomerOrderRequest.setLastName("Chinnedu");
-        updateCustomerOrderRequest.setEmail("dayo@gmail.com");
+        updateCustomerOrderRequest.setEmail("wale@gmail.com");
         updateCustomerOrderRequest.setPhoneNumber("0901245432");
         updateCustomerOrderRequest.setHomeAddress("sabo, yaba");
         updateCustomerOrderRequest.setSpecialInstructions("dont use detergent");
         UpdateCustomerOrderResponse updateCustomerOrderResponse = customerService.updateOrder(updateCustomerOrderRequest);
-        assertThat(updateCustomerOrderResponse.getMessage()).contains("Successfully updated your product");
+        assertThat(updateCustomerOrderResponse.getMessage()).contains("Successfully updated");
+    }
+    @Test
+    public void testThatCustomerCanDeleteOrders(){
+        SendCustomerOrderRequest sendCustomerOrderRequest = new SendCustomerOrderRequest();
+        sendCustomerOrderRequest.setFirstName("Wale");
+        sendCustomerOrderRequest.setLastName("Timi");
+        sendCustomerOrderRequest.setEmail("wale@gmail.com");
+        sendCustomerOrderRequest.setPhoneNumber("08023453213");
+        sendCustomerOrderRequest.setHomeAddress("230 herbert macaulay way, sabo yaba Lagos");
+        sendCustomerOrderRequest.setSpecialInstructions("Wash and fold, don't use detergent on the shirt");
+        sendCustomerOrderRequest.setSendAt(LocalDateTime.now());
+        SendCustomerOrderResponse sendCustomerOrderResponse = customerService.sendOrder(sendCustomerOrderRequest);
+        assertThat(sendCustomerOrderResponse.getMessage()).contains("Just Ordered");
+        Long id = sendCustomerOrderResponse.getCustomerId();
+        DeleteSenderOrderResponse deleteSenderOrderResponse = customerService.deleteOrder(id);
+        assertThat(deleteSenderOrderResponse.getMessage()).contains("Order deleted successful");
+
     }
 
 

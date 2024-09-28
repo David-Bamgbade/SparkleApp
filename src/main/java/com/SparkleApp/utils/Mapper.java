@@ -1,9 +1,6 @@
 package com.SparkleApp.utils;
 
-import com.SparkleApp.Dto.request.CreateLaundryMarketPostRequest;
-import com.SparkleApp.Dto.request.SendCustomerOrderRequest;
-import com.SparkleApp.Dto.request.SignupCustomerRequest;
-import com.SparkleApp.Dto.request.UpdateCustomerOrderRequest;
+import com.SparkleApp.Dto.request.*;
 import com.SparkleApp.Dto.response.CreateLaundryMarketPostResponse;
 import com.SparkleApp.Dto.response.SendCustomerOrderResponse;
 import com.SparkleApp.Dto.response.SignUpCustomerResponse;
@@ -21,7 +18,6 @@ public class Mapper {
         customer.setEmail(signupCustomerRequest.getEmail());
         customer.setPhoneNumber(signupCustomerRequest.getPhoneNumber());
         customer.setPassword(signupCustomerRequest.getPassword());
-        customer.setConfirmPassword(signupCustomerRequest.getConfirmPassword());
         if (signupCustomerRequest.getEmail() == "@") {
             throw new InvalidEmailException("Missing @ in your email");
 
@@ -30,7 +26,6 @@ public class Mapper {
             throw new InvalidEmailException("Missing . in your email");
         }
     }
-
     public static SignUpCustomerResponse signUpCustomerResponseMapper(Customer customer) {
         SignUpCustomerResponse signUpCustomerResponse = new SignUpCustomerResponse();
         signUpCustomerResponse.setCustomerId(customer.getId());
@@ -39,7 +34,6 @@ public class Mapper {
         signUpCustomerResponse.setEmail(customer.getEmail());
         signUpCustomerResponse.setPhoneNumber(customer.getPhoneNumber());
         signUpCustomerResponse.setPassword(customer.getPassword());
-        signUpCustomerResponse.setConfirmPassword(customer.getConfirmPassword());
         signUpCustomerResponse.setMessage("Successfully signup");
         return signUpCustomerResponse;
     }
@@ -56,6 +50,7 @@ public class Mapper {
 
     public static SendCustomerOrderResponse getSendCustomerOrderResponse(Customer customer) {
         SendCustomerOrderResponse sendCustomerOrderResponse = new SendCustomerOrderResponse();
+        sendCustomerOrderResponse.setCustomerId(customer.getId());
         sendCustomerOrderResponse.setFirstName(customer.getFirstName());
         sendCustomerOrderResponse.setLastName(customer.getLastName());
         sendCustomerOrderResponse.setEmail(customer.getEmail());
@@ -100,6 +95,7 @@ public class Mapper {
 
     public static CreateLaundryMarketPostResponse postMapResponse(LaundryMarket laundryMarket) {
         CreateLaundryMarketPostResponse createLaundryMarketPostResponse = new CreateLaundryMarketPostResponse();
+        createLaundryMarketPostResponse.setLaundererId(laundryMarket.getId());
         createLaundryMarketPostResponse.setServiceName(laundryMarket.getServiceName());
         createLaundryMarketPostResponse.setServiceDescription(laundryMarket.getServiceDescription());
         createLaundryMarketPostResponse.setPriceForServiceOfItem(laundryMarket.getPriceForServiceOfItem());
@@ -111,5 +107,30 @@ public class Mapper {
         createLaundryMarketPostResponse.setMessage("Posted successfully");
         return createLaundryMarketPostResponse;
     }
+
+    private static void postRequestMapper(UpdateLaundryMarketPostRequest laundererMarketPostRequest, LaundryMarket laundryMarket) {
+        laundryMarket.setServiceName(laundererMarketPostRequest.getServiceName());
+        laundryMarket.setServiceDescription(laundryMarket.getServiceDescription());
+        laundryMarket.setPriceForServiceOfItem(laundryMarket.getPriceForServiceOfItem());
+        laundryMarket.setService(laundererMarketPostRequest.getService().WASH_AND_IRON);
+        laundryMarket.setItem(laundererMarketPostRequest.getItem().HOODIE);
+        laundryMarket.setCompanyName(laundryMarket.getCompanyName());
+        laundryMarket.setCompanyAddress(laundererMarketPostRequest.getCompanyAddress());
+        laundryMarket.setCompanyPhoneNumber(laundererMarketPostRequest.getCompanyPhoneNumber());
+    }
+
+    private static LaundryMarket getLaundryMarket(UpdateLaundryMarketPostRequest laundererMarketPostRequest) {
+        LaundryMarket laundryMarket = new LaundryMarket();
+        laundryMarket.setServiceName(laundererMarketPostRequest.getServiceName());
+        laundryMarket.setServiceDescription(laundryMarket.getServiceDescription());
+        laundryMarket.setPriceForServiceOfItem(laundryMarket.getPriceForServiceOfItem());
+        laundryMarket.setService(laundererMarketPostRequest.getService().WASH_AND_IRON);
+        laundryMarket.setItem(laundererMarketPostRequest.getItem().HOODIE);
+        laundryMarket.setCompanyName(laundryMarket.getCompanyName());
+        laundryMarket.setCompanyAddress(laundererMarketPostRequest.getCompanyAddress());
+        laundryMarket.setCompanyPhoneNumber(laundererMarketPostRequest.getCompanyPhoneNumber());
+        return laundryMarket;
+    }
+
 
 }

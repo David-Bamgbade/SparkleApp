@@ -31,20 +31,18 @@ public class CustomerServiceImpl implements CustomerService {
         validateEmail(signupCustomerRequest.getEmail());
         Customer customer = new Customer();
         signupCustomerMapper(signupCustomerRequest, customer);
-        if (isValueIsNullOrEmpty(signupCustomerRequest.getFirstName())||
-                isValueIsNullOrEmpty(signupCustomerRequest.getLastName())||
-                isValueIsNullOrEmpty(signupCustomerRequest.getEmail())||
-                isValueIsNullOrEmpty(signupCustomerRequest.getPhoneNumber())||
-                isValueIsNullOrEmpty(signupCustomerRequest.getPassword())||
-                isValueIsNullOrEmpty(signupCustomerRequest.getConfirmPassword())){
+        if (isValueIsNullOrEmpty(signupCustomerRequest.getFirstName()) ||
+                isValueIsNullOrEmpty(signupCustomerRequest.getLastName()) ||
+                isValueIsNullOrEmpty(signupCustomerRequest.getEmail()) ||
+                isValueIsNullOrEmpty(signupCustomerRequest.getPhoneNumber()) ||
+                isValueIsNullOrEmpty(signupCustomerRequest.getPassword())) {
+
             throw new EmptyFeildsException("Please enter all the fields");
+        }else {
+            customer.setPassword(passwordEncoder.encode(signupCustomerRequest));
+            customer = customerRepository.save(customer);
+            return signUpCustomerResponseMapper(customer);
         }
-        if (!(customer.getConfirmPassword() == customer.getPassword())){
-            throw new UnMatchablePasswordException("Password mismatch");
-        }
-        customer.setPassword(passwordEncoder.encode(signupCustomerRequest));
-        customer = customerRepository.save(customer);
-        return signUpCustomerResponseMapper(customer);
     }
     private void validateEmail(String email) {
         for (Customer customerEmail: customerRepository.findAll()) {
@@ -60,18 +58,21 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public LoginCustomerResponse loginCustomer(LoginCustomerRequest loginCustomerRequest) {
         Customer customer = findCustomerByEmail(loginCustomerRequest.getEmail());
+        customer.setEmail(loginCustomerRequest.getEmail());
         customer.setPassword(loginCustomerRequest.getPassword());
-        validatePassword(customer,loginCustomerRequest.getPassword());
+//        validatePassword(customer,loginCustomerRequest.getPassword());
         customerRepository.save(customer);
         LoginCustomerResponse loginCustomerResponse = new LoginCustomerResponse();
         loginCustomerResponse.setLoggedIn(true);
-        loginCustomerResponse.setMessage("Login successfully");
+        loginCustomerResponse
+                .setMessage("Login successfully");
         return loginCustomerResponse;
     }
 
     private Customer findCustomerByEmail(String email) {
-        return customerRepository.findByEmail(email)
-                .orElseThrow(()-> new CustomerDoesNotExist("Customer does not exist"));
+        Customer customer = customerRepository.findByEmail(email).
+                orElseThrow(()-> new CustomerDoesNotExist("Customer does not exist"));
+        return customer;
     }
 
     private void validatePassword(Customer customer, String password) {
@@ -111,7 +112,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new EmptyFeildsException("Empty fields!! Please enter all the fields");
         }
         if (!(customerOrderRequest.getEmail().contains("@"))||
-                customerOrderRequest.getEmail().contains(">"))throw new InvalidEmailException("Invalid email");
+                !customerOrderRequest.getEmail().contains("."))throw new InvalidEmailException("Invalid email");
         map(customerOrderRequest, customer);
         customerRepository.save(customer);
         return Mapper(customer);

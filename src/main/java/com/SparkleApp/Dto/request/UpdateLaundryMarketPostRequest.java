@@ -14,9 +14,11 @@ public class UpdateLaundryMarketPostRequest {
     private String serviceDescription;
     private String companyName;
     private String companyPhoneNumber;
+    private String companyAddress;
     private long priceForServiceOfItem;
     @Enumerated(EnumType.STRING)
     private ServiceType service;
     @Enumerated(EnumType.STRING)
     private ItemType item;
+
 }
