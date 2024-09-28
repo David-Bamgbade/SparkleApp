@@ -9,17 +9,22 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-
-public class LaundererMarket {
+public class LaundryMarket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String serviceName;
+    private String serviceDescription;
     private String companyName;
     private String companyAddress;
     private String companyPhoneNumber;
+
     private long priceOfItem;
     private String nameOfItem;
-    private String serviceDescription;
     private String imageLink;
     private LocalDateTime createdAt;
+
+    private long priceForServiceOfItem;
+    @Enumerated(EnumType.STRING)
+    private ServiceType service;
 }

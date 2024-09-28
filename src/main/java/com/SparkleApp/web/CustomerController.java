@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/customer/")
 @RequiredArgsConstructor
 public class CustomerController {
 
@@ -34,7 +34,7 @@ public class CustomerController {
         }
     }
     @PostMapping("login")
-    public ResponseEntity<?> loginCustomer(LoginCustomerRequest loginCustomerRequest){
+    public ResponseEntity<?> loginCustomer(@RequestBody LoginCustomerRequest loginCustomerRequest){
         try {
             LoginCustomerResponse loginCustomerResponse = customerService.loginCustomer(loginCustomerRequest);
             return new ResponseEntity<>(new CustomerApiResponse(true, loginCustomerResponse),
@@ -47,7 +47,7 @@ public class CustomerController {
     }
 
     @PostMapping("placeOrder")
-    public ResponseEntity<?> placeOrder(SendCustomerOrderRequest sendCustomerOrderRequest){
+    public ResponseEntity<?> placeOrder(@RequestBody SendCustomerOrderRequest sendCustomerOrderRequest){
         try {
             SendCustomerOrderResponse sendCustomerOrderResponse = customerService.sendOrder(sendCustomerOrderRequest);
             return new ResponseEntity<>(new CustomerApiResponse(true, sendCustomerOrderResponse),
@@ -60,7 +60,7 @@ public class CustomerController {
     }
 
     @PutMapping("/updateOrder")
-    public ResponseEntity<?> updateOrder(UpdateCustomerOrderRequest updateCustomerOrderRequest){
+    public ResponseEntity<?> updateOrder(@RequestBody UpdateCustomerOrderRequest updateCustomerOrderRequest){
         try {
             UpdateCustomerOrderResponse updateCustomerOrderResponse = customerService.updateOrder(updateCustomerOrderRequest);
             return new ResponseEntity<>(new CustomerApiResponse(true, updateCustomerOrderResponse),
@@ -71,8 +71,8 @@ public class CustomerController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-    @DeleteMapping("/deleteOrder")
-    public ResponseEntity<?> deleteOrder(Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id){
         try {
             DeleteSenderOrderResponse deleteSenderOrderResponse = customerService.deleteOrder(id);
             return new ResponseEntity<>(new CustomerApiResponse(true, deleteSenderOrderResponse),
@@ -83,5 +83,4 @@ public class CustomerController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-
 }

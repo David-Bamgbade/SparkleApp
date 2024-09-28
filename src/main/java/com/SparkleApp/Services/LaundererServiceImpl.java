@@ -6,7 +6,7 @@ import com.SparkleApp.data.Repository.LaundererMarketRepository;
 import com.SparkleApp.data.Repository.LaundererRepository;
 import com.SparkleApp.data.Repository.OrderPlacementRepository;
 import com.SparkleApp.data.models.Launderer;
-import com.SparkleApp.data.models.LaundererMarket;
+import com.SparkleApp.data.models.LaundryMarket;
 import com.SparkleApp.data.models.OrderPlacement;
 import com.SparkleApp.exception.LaundererAlreadyExistException;
 import com.SparkleApp.exception.LaundererNotLoggedInException;
@@ -137,9 +137,9 @@ public class LaundererServiceImpl implements LaundererService{
         Launderer launderer = laundererRepository.findByEmail(request2.getEmail().toLowerCase());
         if (launderer.getLoggedIn()) {
             LaundererPostAdResponse response = new LaundererPostAdResponse();
-            LaundererMarket market = new LaundererMarket();
-            market.setCompanyName(validateAddress(request.getCompanyName().toLowerCase()));
-            market.setPriceOfItem(request.getPriceOfItem());
+            LaundryMarket market = new LaundryMarket();
+            market.setCompanyName(validateInput(findByLaundererPhoneNumber(request.getCompanyName())).toLowerCase());
+            market.setPriceForServiceOfItem(request.getPriceForServiceOfItem());
             market.setCompanyAddress(validateAddress(request.getCompanyAddress()).toLowerCase());
             market.setImageLink(request.getImageLink());
             market.setCreatedAt(LocalDateTime.now());
