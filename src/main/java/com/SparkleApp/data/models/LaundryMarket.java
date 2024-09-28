@@ -27,4 +27,5 @@ public class LaundryMarket {
     private long priceForServiceOfItem;
     @Enumerated(EnumType.STRING)
     private ServiceType service;
+    private ItemType item;
 }
