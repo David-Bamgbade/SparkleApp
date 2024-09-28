@@ -28,8 +28,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public SignUpCustomerResponse signupCustomer(SignupCustomerRequest signupCustomerRequest) {
-        validateEmail(signupCustomerRequest.getEmail());
+
         Customer customer = new Customer();
+        validateEmail(signupCustomerRequest.getEmail());
         signupCustomerMapper(signupCustomerRequest, customer);
         if (isValueIsNullOrEmpty(signupCustomerRequest.getFirstName()) ||
                 isValueIsNullOrEmpty(signupCustomerRequest.getLastName()) ||
@@ -44,29 +45,40 @@ public class CustomerServiceImpl implements CustomerService {
             return signUpCustomerResponseMapper(customer);
         }
     }
+
     private void validateEmail(String email) {
         for (Customer customerEmail: customerRepository.findAll()) {
-            if (customerEmail.getEmail() == email) {
+            if (customerEmail.getEmail().equals(email)) {
                 throw new EmailAlreadyExistException("Customer already exist");
             }
         }
     }
+
     private boolean isValueIsNullOrEmpty(String value) {
         return value == null  || value.trim().isEmpty();
     }
 
     @Override
     public LoginCustomerResponse loginCustomer(LoginCustomerRequest loginCustomerRequest) {
+        validateCustomerPassword(loginCustomerRequest.getPassword());
         Customer customer = findCustomerByEmail(loginCustomerRequest.getEmail());
         customer.setEmail(loginCustomerRequest.getEmail());
         customer.setPassword(loginCustomerRequest.getPassword());
-//        validatePassword(customer,loginCustomerRequest.getPassword());
+        validatePassword(customer,loginCustomerRequest.getPassword());
         customerRepository.save(customer);
         LoginCustomerResponse loginCustomerResponse = new LoginCustomerResponse();
         loginCustomerResponse.setLoggedIn(true);
         loginCustomerResponse
                 .setMessage("Login successfully");
         return loginCustomerResponse;
+    }
+
+    private void validateCustomerPassword(String password) {
+        boolean isPasswordExist = customerRepository.existsByPassword(password);
+        if (isPasswordExist){
+            throw new PasswordNotExistException("Wrong email or password");
+        }
+
     }
 
     private Customer findCustomerByEmail(String email) {

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/laundryMarket")
+@RequestMapping("/laundryMarket/")
 @RequiredArgsConstructor
 public class LaundryMarketController {
 
@@ -39,7 +39,6 @@ public class LaundryMarketController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-
     @PutMapping("/updatePost")
     public ResponseEntity<?> updatePost(@RequestBody UpdateLaundryMarketPostRequest laundryMarketPostRequest){
         try {
