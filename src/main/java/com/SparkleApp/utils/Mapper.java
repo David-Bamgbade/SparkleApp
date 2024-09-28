@@ -18,11 +18,11 @@ public class Mapper {
         customer.setEmail(signupCustomerRequest.getEmail());
         customer.setPhoneNumber(signupCustomerRequest.getPhoneNumber());
         customer.setPassword(signupCustomerRequest.getPassword());
-        if (signupCustomerRequest.getEmail() == "@") {
+        if (signupCustomerRequest.getEmail().contains("@") ) {
             throw new InvalidEmailException("Missing @ in your email");
 
         }
-        if (signupCustomerRequest.getEmail() == ".") {
+        if (signupCustomerRequest.getEmail().contains(".")) {
             throw new InvalidEmailException("Missing . in your email");
         }
     }
@@ -57,6 +57,7 @@ public class Mapper {
         sendCustomerOrderResponse.setPhoneNumber(customer.getPhoneNumber());
         sendCustomerOrderResponse.setHomeAddress(customer.getHomeAddress());
         sendCustomerOrderResponse.setSpecialInstruction(customer.getSpecialInstructions());
+        sendCustomerOrderResponse.setUpdatedAt(customer.getUpdatedAt());
         sendCustomerOrderResponse.setMessage("Just Ordered");
         return sendCustomerOrderResponse;
     }

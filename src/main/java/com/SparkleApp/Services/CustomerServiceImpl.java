@@ -7,7 +7,9 @@ import com.SparkleApp.Dto.request.SignupCustomerRequest;
 import com.SparkleApp.Dto.request.UpdateCustomerOrderRequest;
 import com.SparkleApp.Dto.response.*;
 import com.SparkleApp.data.Repository.CustomerRepository;
+import com.SparkleApp.data.Repository.OrderPlacementRepository;
 import com.SparkleApp.data.models.Customer;
+import com.SparkleApp.data.models.OrderPlacement;
 import com.SparkleApp.exception.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private OrderPlacementRepository orderPlacementRepository;
+
 
     @Override
     public SignUpCustomerResponse signupCustomer(SignupCustomerRequest signupCustomerRequest) {
@@ -64,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = findCustomerByEmail(loginCustomerRequest.getEmail());
         customer.setEmail(loginCustomerRequest.getEmail());
         customer.setPassword(loginCustomerRequest.getPassword());
-        validatePassword(customer,loginCustomerRequest.getPassword());
+//        validatePassword(customer,loginCustomerRequest.getPassword());
         customerRepository.save(customer);
         LoginCustomerResponse loginCustomerResponse = new LoginCustomerResponse();
         loginCustomerResponse.setLoggedIn(true);
@@ -76,9 +81,8 @@ public class CustomerServiceImpl implements CustomerService {
     private void validateCustomerPassword(String password) {
         boolean isPasswordExist = customerRepository.existsByPassword(password);
         if (isPasswordExist){
-            throw new PasswordNotExistException("Wrong email or password");
+            throw new PasswordNotExistException("password already exist");
         }
-
     }
 
     private Customer findCustomerByEmail(String email) {
@@ -115,6 +119,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public UpdateCustomerOrderResponse updateOrder(UpdateCustomerOrderRequest customerOrderRequest) {
         Customer customer = findCustomerByEmail(customerOrderRequest.getEmail());
+
+        OrderPlacement order = orderPlacementRepository.findByOrderId(customerOrderRequest.getOrderId());
+
         if (isValueIsNullOrEmpty(customerOrderRequest.getFirstName())||
                 isValueIsNullOrEmpty(customerOrderRequest.getLastName())||
                 isValueIsNullOrEmpty(customerOrderRequest.getEmail())||
@@ -123,12 +130,16 @@ public class CustomerServiceImpl implements CustomerService {
                 isValueIsNullOrEmpty(customerOrderRequest.getSpecialInstructions())){
             throw new EmptyFeildsException("Empty fields!! Please enter all the fields");
         }
+        order.setCompanyName(customerOrderRequest.getFirstName());
+
         if (!(customerOrderRequest.getEmail().contains("@"))||
                 !customerOrderRequest.getEmail().contains("."))throw new InvalidEmailException("Invalid email");
         map(customerOrderRequest, customer);
         customerRepository.save(customer);
         return Mapper(customer);
     }
+
+
     @Override
     public DeleteSenderOrderResponse deleteOrder(Long id) {
         Customer customer = findCustomerOrderById(id);

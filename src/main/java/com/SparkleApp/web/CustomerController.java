@@ -71,7 +71,7 @@ public class CustomerController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-    @DeleteMapping("/deleteOrder/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable Long id){
         try {
             DeleteSenderOrderResponse deleteSenderOrderResponse = customerService.deleteOrder(id);
