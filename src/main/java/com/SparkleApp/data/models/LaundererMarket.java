@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Setter
 @Getter
@@ -15,16 +17,9 @@ public class LaundererMarket {
     private String companyName;
     private String companyAddress;
     private String companyPhoneNumber;
-    private long priceForServiceOfItem;
-//    @Enumerated(EnumType.STRING)
-//    private ServiceType service;
-//    @Enumerated(EnumType.STRING)
-//    private ItemType item;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phoneNumber;
-    private String password;
-    private String confirmPassword;
-
+    private long priceOfItem;
+    private String nameOfItem;
+    private String serviceDescription;
+    private String imageLink;
+    private LocalDateTime createdAt;
 }

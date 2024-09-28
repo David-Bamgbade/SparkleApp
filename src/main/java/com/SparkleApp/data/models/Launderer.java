@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Setter
 @Getter
@@ -17,5 +19,9 @@ public class Launderer {
     private String phoneNumber;
     private String password;
     private String confirmPassword;
-    private boolean loggedIn = false;
+    @Column(name = "logged_in", nullable = false)
+    private Boolean loggedIn;
+    private LocalDateTime sendAt;
+    private LocalDateTime receivedAt;
+    private LocalDateTime createdAt;
 }

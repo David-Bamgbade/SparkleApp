@@ -13,6 +13,9 @@ import com.SparkleApp.exception.LaundererNotLoggedInException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
+
 @Service
 public class LaundererServiceImpl implements LaundererService{
 
@@ -28,21 +31,24 @@ public class LaundererServiceImpl implements LaundererService{
     public SignUpLaundererResponse signUp(SignUpLaundererRequest request) {
         validate(request);
         SignUpLaundererResponse response = new SignUpLaundererResponse();
-        if(laundererRepository.findByEmailAndPhoneNumber(validateEmail(request.getEmail().toLowerCase()), validatePhoneNumber(request.getPhoneNumber())) == null){
-            Launderer launderer = new Launderer();
-            launderer.setFirstName(validateFirstName(request.getFirstName()).toLowerCase());
-            launderer.setLastName(validateLastName(request.getLastName()).toLowerCase());
-            launderer.setPhoneNumber(validatePhoneNumber(verifyPhoneNumber(request.getPhoneNumber())));
-            launderer.setLoggedIn(false);
-            launderer.setEmail(validateEmail(request.getEmail()).toLowerCase());
-            launderer.setPassword(validatePassword(request.getPassword()).toLowerCase());
-            launderer.setConfirmPassword(validatePassword(request.getConfirmPassword()).toLowerCase());
-            laundererRepository.save(launderer);
-        }
-        else{
-            throw new IllegalArgumentException("User already exists");
-        }
+        Launderer launderer = laundererRepository.findByEmailAndPhoneNumber(validateEmail(request.getEmail().toLowerCase()), validatePhoneNumber(request.getPhoneNumber()));
+            if (launderer == null) {
+                Launderer launderer1 = new Launderer();
+                launderer1.setFirstName(String.valueOf(validateFirstName(request.getFirstName()).toLowerCase()));
+                launderer1.setLastName(validateLastName(request.getLastName()).toLowerCase());
+                launderer1.setPhoneNumber(validatePhoneNumber(verifyPhoneNumber(request.getPhoneNumber())));
+                launderer1.setLoggedIn(true);
+                launderer1.setEmail(validateEmail(request.getEmail()).toLowerCase());
+                launderer1.setPassword(validatePassword(request.getPassword()).toLowerCase());
+                launderer1.setConfirmPassword(validatePassword(validateConfirmPassword(request.getConfirmPassword())).toLowerCase());
+                launderer1.setCreatedAt(LocalDateTime.now());
+                laundererRepository.save(launderer1);
+            } else {
+                throw new IllegalArgumentException("User already exists");
+            }
+
         response.setMessage("Successfully signed up");
+        response.setCreatedAt(LocalDateTime.now());
         return response;
     }
 
@@ -50,17 +56,16 @@ public class LaundererServiceImpl implements LaundererService{
     @Override
     public LoginLaundererResponse loginLaunderer(LoginLaundererRequest request) {
         LoginLaundererResponse response = new LoginLaundererResponse();
-        Launderer launderer = laundererRepository.findByEmailAndPassword(
-                validateEmail(request.getEmail()).toLowerCase(),
-                validatePassword(request.getPassword()).toLowerCase()
-        );
-        if (launderer != null) {
-            response.setLoggedIn(true);
-            launderer.setLoggedIn(true);
-        } else {
-            response.setLoggedIn(false);
-            throw new RuntimeException("Invalid Email or Password");
-        }
+         Launderer launderer = laundererRepository.findByEmailAndPassword(validateEmail(request.getEmail()).toLowerCase(), validatePassword(request.getPassword()).toLowerCase());
+         if(launderer != null){
+             launderer.setLoggedIn(true);
+             request.setLoggedIn(request.getLoggedIn());
+             response.setLoggedIn(true);
+             laundererRepository.save(launderer);
+         }
+         else {
+             throw new IllegalArgumentException("Invalid email or password");
+         }
         return response;
     }
 
@@ -68,21 +73,31 @@ public class LaundererServiceImpl implements LaundererService{
     public LaundererReceiveResponse laundererReceivePackage(LaundererReceiveRequest request) {
         LaundererReceiveResponse response = new LaundererReceiveResponse();
         OrderPlacement order = new OrderPlacement();
-        order.setCustomerFirstName(validateFirstName(request.getFirstName()).toLowerCase());
-        order.setCustomerLastName(validateLastName(request.getLastName()).toLowerCase());
+        order.setCustomerFirstName(validateFirstName(request.getCustomerFirstName()).toLowerCase());
+        order.setCustomerLastName(validateLastName(request.getCustomerLastName()).toLowerCase());
         order.setNumberOfItems(request.getNumberOfItems());
         order.setCustomerPhoneNumber(request.getCustomerPhoneNumber());
         order.setCustomerAddress(request.getCustomerAddress().toLowerCase());
-        order.setService(request.getService());
-        order.setItem(request.getItem());
+        order.setServiceDescription(request.getServiceDescription());
+        order.setNameOfItems(request.getNameOfItems());
         orderPlacementRepository.save(order);
-        response.setCustomerFirstName(response.getCustomerFirstName().toLowerCase());
-        response.setCustomerLastName(response.getCustomerLastName().toLowerCase());
-        response.setCustomerPhoneNumber(response.getCustomerPhoneNumber().toLowerCase());
-        response.setCustomerAddress(response.getCustomerAddress().toLowerCase());
-        response.setNameOfItems(response.getNameOfItems().toLowerCase());
-        response.setNumberOfItems(response.getNumberOfItems().toLowerCase());
+        response.setCustomerFirstName(order.getCustomerFirstName().toLowerCase());
+        response.setCustomerLastName(order.getCustomerLastName().toLowerCase());
+        response.setCustomerPhoneNumber(order.getCustomerPhoneNumber().toLowerCase());
+        response.setCustomerAddress(order.getCustomerAddress().toLowerCase());
+        response.setNameOfItems(order.getNameOfItems().toLowerCase());
+        response.setNumberOfItems(order.getNumberOfItems());
         return response;
+    }
+
+    private String validateConfirmPassword(String confirmPassword){
+        Launderer launderer = laundererRepository.findByPassword(validatePassword(confirmPassword));
+        if(launderer.getConfirmPassword() != launderer.getPassword()){
+            throw new IllegalArgumentException("Password mismatch");
+        }
+        else {
+            return confirmPassword;
+        }
     }
 
     @Override
@@ -97,26 +112,50 @@ public class LaundererServiceImpl implements LaundererService{
         order.setTotalServicePrice(request.getTotalPrice());
         order.setPaymentStatus(request.isPaymentStatus());
         order.setNumberOfItems(request.getNumberOfItems());
-        order.setCompanyAddress(validateAddress(request.getCustomerAddress()).toLowerCase());
+        order.setCompanyAddress(validateAddress(request.getCompanyAddress()).toLowerCase());
         order.setCompanyName(validateInput(request.getCompanyName().toLowerCase()));
-        order.setCompanyPhoneNumber(validatePhoneNumber(request.getCustomerPhoneNumber()));
+        order.setCompanyPhoneNumber(validatePhoneNumber(String.valueOf(request.getCompanyPhoneNumber())));
+        order.setOrderDescription(validateInput(request.getOrderDescription().toLowerCase()));
+        order.setCreatedAt(LocalDateTime.now());
         orderPlacementRepository.save(order);
         response.setMessage("Order Sent To Rider");
+        response.setCustomerFirstName((request.getCustomerFirstName().toLowerCase()));
+        response.setCustomerLastName((request.getCustomerLastName().toLowerCase()));
+        response.setCustomerPhoneNumber(request.getCustomerPhoneNumber().toLowerCase());
+        response.setCustomerAddress(request.getCustomerAddress().toLowerCase());
+        response.setNameOfItems(request.getNameOfItems());
+        response.setNumberOfItems(request.getNumberOfItems());
+        response.setCompanyName(request.getCompanyName().toLowerCase());
+        response.setCompanyPhoneNumber(request.getCompanyPhoneNumber());
+        response.setCompanyAddress(request.getCompanyAddress().toLowerCase());
+        response.setOrderDescription(request.getOrderDescription().toLowerCase());
         response.setUserId(orderId);
         return response;
     }
 
-    public LaundererPostAdResponse laundererPostAd(LaundererPostAdRequest request) {
-        SignUpLaundererRequest request1 = new SignUpLaundererRequest();
-        Launderer launderer = laundererRepository.findByEmail(request1.getEmail().toLowerCase());
-        if (launderer.isLoggedIn()) {
+    public LaundererPostAdResponse laundererPostAd(LaundererPostAdRequest request, VerifyEmailRequest request2) {
+        Launderer launderer = laundererRepository.findByEmail(request2.getEmail().toLowerCase());
+        if (launderer.getLoggedIn()) {
             LaundererPostAdResponse response = new LaundererPostAdResponse();
             LaundererMarket market = new LaundererMarket();
-            market.setCompanyName(validateInput(findByLaundererPhoneNumber(request.getCompanyName())).toLowerCase());
-            market.setPriceForServiceOfItem(request.getPriceForServiceOfItem());
+            market.setCompanyName(validateAddress(request.getCompanyName().toLowerCase()));
+            market.setPriceOfItem(request.getPriceOfItem());
             market.setCompanyAddress(validateAddress(request.getCompanyAddress()).toLowerCase());
+            market.setImageLink(request.getImageLink());
+            market.setCreatedAt(LocalDateTime.now());
+            market.setServiceDescription(request.getServiceDescription().toLowerCase());
+            market.setNameOfItem(validateInput(request.getNameOfItem()).toLowerCase());
+            market.setCompanyPhoneNumber(validatePhoneNumber(request.getCompanyPhoneNumber()));
             laundererMarketRepository.save(market);
             response.setMessage("Ad posted successfully");
+            response.setImageLink(market.getImageLink());
+            response.setCompanyAddress(validateAddress(validateAddress(market.getCompanyAddress()).toLowerCase()));
+            response.setCompanyName(validateInput(market.getCompanyName().toLowerCase()) );
+            response.setCreatedAt(LocalDateTime.now());
+            response.setPriceOfItem(market.getPriceOfItem());
+            response.setServiceDescription(validateAddress(market.getServiceDescription()).toLowerCase());
+            response.setNameOfItem(validateInput(market.getNameOfItem()).toLowerCase());
+            response.setCompanyPhoneNumber(validatePhoneNumber(market.getCompanyPhoneNumber()));
             return response;
         }
         else{

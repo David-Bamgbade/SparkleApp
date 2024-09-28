@@ -13,7 +13,8 @@ public class LaundererReceiveResponse {
      private String customerEmail;
      private String customerPhoneNumber;
      private String customerAddress;
-     private String numberOfItems;
+     private int numberOfItems;
      private String nameOfItems;
      private Payment customerPayment;
+     private String message;
 }
