@@ -5,11 +5,18 @@ import com.SparkleApp.Dto.request.UpdateLaundryMarketPostRequest;
 import com.SparkleApp.Dto.response.CreateLaundryMarketPostResponse;
 import com.SparkleApp.Dto.response.DeleteLaundryMarketPostResponse;
 import com.SparkleApp.Dto.response.UpdateLaundryMarketPostResponse;
+import com.SparkleApp.data.Repository.CustomerRepository;
 import com.SparkleApp.data.Repository.LaundererMarketRepository;
 import com.SparkleApp.data.models.LaundryMarket;
+import com.SparkleApp.data.models.ServiceType;
+import com.SparkleApp.exception.CompanyPhoneNumberException;
 import com.SparkleApp.exception.IdNotFoundException;
+import com.SparkleApp.exception.LaundryMarketServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 import static com.SparkleApp.utils.Mapper.postMap;
 import static com.SparkleApp.utils.Mapper.postMapResponse;
@@ -20,13 +27,27 @@ public class LaundererMarketServiceImpl implements  LaundererMarketService{
     @Autowired
     private LaundererMarketRepository laundererMarketRepository;
 
-
     @Override
     public CreateLaundryMarketPostResponse createPost(CreateLaundryMarketPostRequest laundererMarketRequest) {
+        validateLaundryMarketPostCompanyPhoneNumber(laundererMarketRequest.getCompanyPhoneNumber());
         LaundryMarket laundryMarket = new LaundryMarket();
+        validateLaundryMarketPostService(laundryMarket.getService());
         postMap(laundererMarketRequest, laundryMarket);
         laundererMarketRepository.save(laundryMarket);
         return postMapResponse(laundryMarket);
+    }
+
+    private void validateLaundryMarketPostService(ServiceType service) {
+        boolean isMarketServiceExist = laundererMarketRepository.existsByService(service);
+        if (isMarketServiceExist){
+            throw new LaundryMarketServiceException("Sorry this service does not exist");
+        }
+
+    }
+
+    private void validateLaundryMarketPostCompanyPhoneNumber(String companyPhoneNumber) {
+        boolean isPhoneNumberExist = laundererMarketRepository.existsByCompanyPhoneNumber(companyPhoneNumber);
+        if (isPhoneNumberExist)throw new CompanyPhoneNumberException("This company phone number already exist");
     }
 
     @Override
@@ -44,6 +65,32 @@ public class LaundererMarketServiceImpl implements  LaundererMarketService{
         laundryMarketPostResponse.setMessage("Delete successfully");
         return laundryMarketPostResponse;
     }
+
+    @Override
+    public List<LaundryMarket> findLaundryMarketPostByServiceName(String serviceName) {
+        return findLaundryMarketPostByServiceName(serviceName);
+    }
+
+    @Override
+    public List<LaundryMarket> findLaundryMarketPostByServiceDescription(String serviceDescription) {
+        return laundererMarketRepository.findLaundryMarketPostByServiceDescription(serviceDescription);
+    }
+
+    @Override
+    public List<LaundryMarket> findLaundryMarketPostByCompanyName(String companyName) {
+        return laundererMarketRepository.findLaundryMarketPostByCompanyName(companyName);
+    }
+
+    @Override
+    public List<LaundryMarket> findLaundryMarketPostByCompanyAddress(String companyAddress) {
+        return laundererMarketRepository.findLaundryMarketPostByCompanyAddress(companyAddress);
+    }
+
+    @Override
+    public List<LaundryMarket> findAllLaundryMarketPosts() {
+        return laundererMarketRepository.findAll();
+    }
+
 
     private LaundryMarket findLaundryMarketById(Long id) {
         return laundererMarketRepository.findById(id)

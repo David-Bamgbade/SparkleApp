@@ -6,14 +6,15 @@ import com.SparkleApp.Dto.request.SignupCustomerRequest;
 import com.SparkleApp.Dto.request.UpdateCustomerOrderRequest;
 import com.SparkleApp.Dto.response.*;
 import com.SparkleApp.data.Repository.CustomerRepository;
+import com.SparkleApp.exception.EmailAlreadyExistException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class CustomerServiceTest {
@@ -49,6 +50,10 @@ class CustomerServiceTest {
         signupCustomerRequest.setEmail("christian@gmail.com");
         signupCustomerRequest.setPhoneNumber("09012457786");
         signupCustomerRequest.setPassword("1234");
+        assertThrows(EmailAlreadyExistException.class,()->{
+
+        });
+
     }
 
     @Test
@@ -125,6 +130,5 @@ class CustomerServiceTest {
         assertThat(deleteSenderOrderResponse.getMessage()).contains("Order deleted successful");
 
     }
-
 
 }

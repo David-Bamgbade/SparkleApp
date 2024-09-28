@@ -56,6 +56,15 @@ class LaundererMarketServiceTest {
         laundryMarketPostRequest.setCompanyPhoneNumber("08123115688");
         CreateLaundryMarketPostResponse laundryMarketPostResponse = laundererMarketService.createPost(laundryMarketPostRequest);
         assertThat(laundryMarketPostResponse.getMessage()).contains("Posted successfully");
+        UpdateLaundryMarketPostRequest updateLaundryMarketPostRequest = getUpdateLaundryMarketPostRequest();
+        UpdateLaundryMarketPostResponse marketPostResponse = laundererMarketService.updatePost(updateLaundryMarketPostRequest);
+        assertThat(marketPostResponse.getMessage()).contains("Post updated successfully");
+
+
+
+    }
+
+    private static UpdateLaundryMarketPostRequest getUpdateLaundryMarketPostRequest() {
         UpdateLaundryMarketPostRequest updateLaundryMarketPostRequest = new UpdateLaundryMarketPostRequest();
         updateLaundryMarketPostRequest.setServiceName("Kim");
         updateLaundryMarketPostRequest.setServiceDescription("Dayo");
@@ -65,11 +74,7 @@ class LaundererMarketServiceTest {
         updateLaundryMarketPostRequest.setCompanyName("Sarvita laundry");
         updateLaundryMarketPostRequest.setCompanyPhoneNumber("0901232322");
         updateLaundryMarketPostRequest.setCompanyAddress("Sabo");
-        UpdateLaundryMarketPostResponse marketPostResponse = laundererMarketService.updatePost(updateLaundryMarketPostRequest);
-        assertThat(marketPostResponse.getMessage()).contains("Post updated successfully");
-
-
-
+        return updateLaundryMarketPostRequest;
     }
 
     @Test
@@ -87,6 +92,5 @@ class LaundererMarketServiceTest {
         Long id = laundryMarketPostResponse.getLaundererId();
         DeleteLaundryMarketPostResponse marketPostResponse = laundererMarketService.deletePost(id);
         assertThat(marketPostResponse.getMessage()).contains("Delete successfully");
-
     }
 }
