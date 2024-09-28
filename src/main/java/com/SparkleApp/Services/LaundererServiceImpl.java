@@ -46,6 +46,7 @@ public class LaundererServiceImpl implements LaundererService{
         return response;
     }
 
+
     @Override
     public LoginLaundererResponse loginLaunderer(LoginLaundererRequest request) {
         LoginLaundererResponse response = new LoginLaundererResponse();
@@ -75,8 +76,13 @@ public class LaundererServiceImpl implements LaundererService{
         order.setService(request.getService());
         order.setItem(request.getItem());
         orderPlacementRepository.save(order);
-        return null;
-
+        response.setCustomerFirstName(response.getCustomerFirstName().toLowerCase());
+        response.setCustomerLastName(response.getCustomerLastName().toLowerCase());
+        response.setCustomerPhoneNumber(response.getCustomerPhoneNumber().toLowerCase());
+        response.setCustomerAddress(response.getCustomerAddress().toLowerCase());
+        response.setNameOfItems(response.getNameOfItems().toLowerCase());
+        response.setNumberOfItems(response.getNumberOfItems().toLowerCase());
+        return response;
     }
 
     @Override
