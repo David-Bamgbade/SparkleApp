@@ -9,16 +9,13 @@ import com.SparkleApp.Dto.response.*;
 import com.SparkleApp.data.Repository.CustomerRepository;
 import com.SparkleApp.data.Repository.OrderPlacementRepository;
 import com.SparkleApp.data.models.Customer;
-import com.SparkleApp.data.models.Email;
 import com.SparkleApp.data.models.OrderPlacement;
 import com.SparkleApp.exception.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.SparkleApp.utils.Mapper.*;
-
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -29,6 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
     @Autowired
     private OrderPlacementRepository orderPlacementRepository;
 
@@ -50,31 +48,11 @@ public class CustomerServiceImpl implements CustomerService {
 
             throw new EmptyFeildsException("Please enter all the fields");
         }else {
-
-            emailService.sendEmail(signupCustomerRequest.getEmail(),
-                    STR."Hello \{signupCustomerRequest.getFirstName()}"+
-                    "Welcome to Sparkles Marketplace! We’re thrilled to have you on board.\n" +
-                            "\n" +
-                            "Thank you for choosing us for your laundry needs. We are committed to providing you with the best service possible. Here’s what you can expect from us:\n" +
-                            "\n" +
-                            "Convenience: Schedule pickups and deliveries at your convenience.\n" +
-                            "Quality: We use high-quality detergents and fabric softeners to ensure your clothes are treated with care.\n" +
-                            "Reliability: Our team is dedicated to delivering your laundry on time, every time.\n" +
-                            "To get started, simply log in to your account and schedule your first pickup. If you have any questions or need assistance, our customer support team is here to help.\n" +
-                            "\n" +
-                            "As a token of our appreciation, here’s a special discount code just for you: WELCOME10. Use this code on your first order to get 10% off.\n" +
-                            "\n" +
-                            "Thank you for trusting us with your laundry. We look forward to serving you!\n" +
-                            "\n" +
-                            "Best regards,\n" +
-                            "Co-Founder: Mfon Mfon\n" +
-                            "Sparkles Marketplace Team");
             customer.setPassword(passwordEncoder.encode(signupCustomerRequest));
             customer = customerRepository.save(customer);
             return signUpCustomerResponseMapper(customer);
         }
     }
-
     private void validateEmail(String email) {
         for (Customer customerEmail: customerRepository.findAll()) {
             if (customerEmail.getEmail().equals(email)) {

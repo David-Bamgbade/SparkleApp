@@ -21,13 +21,13 @@ public class Mapper {
         customer.setEmail(signupCustomerRequest.getEmail());
         customer.setPhoneNumber(signupCustomerRequest.getPhoneNumber());
         customer.setPassword(signupCustomerRequest.getPassword());
-        if (signupCustomerRequest.getEmail().contains("@") ) {
-            throw new InvalidEmailException("Missing @ in your email");
-
-        }
-        if (signupCustomerRequest.getEmail().contains(".")) {
-            throw new InvalidEmailException("Missing . in your email");
-        }
+//        if (signupCustomerRequest.getEmail().contains("@") ) {
+//            throw new InvalidEmailException("Missing @ in your email");
+//
+//        }
+//            if (signupCustomerRequest.getEmail().contains(".")) {
+//                throw new InvalidEmailException("Missing . in your email");
+//            }
 
 
 

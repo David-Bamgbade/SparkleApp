@@ -7,6 +7,7 @@ import com.SparkleApp.Dto.request.SignupCustomerRequest;
 import com.SparkleApp.Dto.request.UpdateCustomerOrderRequest;
 import com.SparkleApp.Dto.response.*;
 import com.SparkleApp.Services.CustomerService;
+import com.SparkleApp.Services.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,21 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
 
 
-    public final CustomerService customerService;
+    private final CustomerService customerService;
+
+    private final EmailService emailService;
 
 
     @PostMapping("/signup")
     public ResponseEntity<?> signupCustomer(@RequestBody SignupCustomerRequest signupCustomerRequest){
         try {
-            SignUpCustomerResponse signUpCustomerResponse = customerService.signupCustomer(signupCustomerRequest);
+            SignUpCustomerResponse signUpCustomerResponse =  customerService.signupCustomer(signupCustomerRequest);
+
+            emailService.sendEmail(
+                    signupCustomerRequest.getEmail(),
+                    "Welcome to Sparkle Marketplace ",
+                    STR."Hello \{signupCustomerRequest.getFirstName()}\n Welcome to sparkle Marketplace! We're thrilled to have you on board.\n Thank you for choosing us for your laundry needs. We are committed to providing you with the best service possible.");
+
             return new ResponseEntity<>(new CustomerApiResponse(true, signUpCustomerResponse),
                     HttpStatus.CREATED);
         }
