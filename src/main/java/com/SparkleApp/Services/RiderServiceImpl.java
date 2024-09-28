@@ -1,13 +1,10 @@
 package com.SparkleApp.Services;
 
-import com.SparkleApp.Dto.request.CheckRiderAvailabilityRequest;
-import com.SparkleApp.Dto.request.SignUpRiderRequest;
-import com.SparkleApp.Dto.request.UpdateRiderRequest;
-import com.SparkleApp.Dto.response.CheckRiderAvailabilityResponse;
-import com.SparkleApp.Dto.response.SignUpRiderResponse;
-import com.SparkleApp.Dto.response.UpdateRiderResponse;
+import com.SparkleApp.Dto.request.*;
+import com.SparkleApp.Dto.response.*;
 import com.SparkleApp.data.Repository.RiderRepository;
 import com.SparkleApp.data.models.Rider;
+import com.SparkleApp.exception.InvalidInputException;
 import com.SparkleApp.exception.RiderAlreadyExistException;
 import com.SparkleApp.exception.RiderNotFoundException;
 import com.SparkleApp.exception.PasswordMismatchException;
@@ -38,44 +35,63 @@ public class RiderServiceImpl implements RiderService{
         return response;
     }
 
-//    @Override
-//    public LoginRiderResponse login(LoginRiderRequest request) {
-//        LoginRiderRequest login = new LoginRiderRequest();
-//        login.setEmail(validateEmail(request.getEmail().toLowerCase()));
-//        login.setPassword(validatePassword(request.getPassword().toLowerCase()));
-//
-//        Rider rider = riderRepository.findRiderByEmail(login.getEmail());
-//        if (rider == null) {
-//            throw new InvalidInputException("Invalid email or password");
-//        }
-//        if (!rider.getPassword().equals(login.getPassword())) {
-//            throw new InvalidInputException("Invalid email or password");
-//        }
-//        LoginRiderResponse response = new LoginRiderResponse();
-//        response.setMessage("Login Successful");
-//
-//        return response;
-//    }
+    @Override
+    public LoginRiderResponse login(LoginRiderRequest request) {
+        LoginRiderRequest login = new LoginRiderRequest();
+        login.setEmail(validateEmail(request.getEmail().toLowerCase()));
+        login.setPassword(validatePassword(request.getPassword().toLowerCase()));
+
+        Rider rider = riderRepository.findRiderByEmail(login.getEmail());
+        if (rider == null) {
+            throw new InvalidInputException("Invalid email or password");
+        }
+        if (!rider.getPassword().equals(login.getPassword())) {
+            throw new InvalidInputException("Invalid email or password");
+        }
+        LoginRiderResponse response = new LoginRiderResponse();
+        response.setMessage("Login Successful");
+
+        return response;
+    }
 
     @Override
     public CheckRiderAvailabilityResponse checkRiderAvailability(CheckRiderAvailabilityRequest request) {
+        Rider rider = riderRepository.findRiderByEmail(validateEmail(request.getRiderEmail().toLowerCase()));
+       if (rider == null) {
+            throw new RiderNotFoundException("Rider not found");
+       }
+       if (rider.isAvailable()) {
+
+       }
+        CheckRiderAvailabilityResponse response = new CheckRiderAvailabilityResponse();
+        response.setMessage("Rider available");
+        return response;
+    }
+
+    @Override
+    public AcceptPickupResponse pickup(AcceptPickupRequest request) {
+               Rider existingRider = riderRepository.findRiderByEmail(validateEmail(request.getRiderEmail().toLowerCase()));
+       if(existingRider == null) {
+           throw new RiderNotFoundException("Rider not found");
+       }
+//        PickupRequest pickupRequest = laundererRepository.findById(request.getPickupRequestId());
+//        if (pickupRequest == null) {
+//            throw new PickupRequestNotFoundException("Pickup request not found");
+//        }
+//        existingRider.setRiderStatus(RiderStatus.ON_THE_WAY);
+//        pickupRequest.setStatus(PickupStatus.ACCEPTED);
+//        pickupRequest.setAssignedRider(existingRider);
+//        existingRider.setRiderStatus(    RiderStatus.ON_THE_WAY);
+//        riderRepository.save(existingRider);
+//        pickupRequestRepository.save(pickupRequest);
+//        AcceptPickupResponse response = new AcceptPickupResponse();
+//        response.setRiderStatus(existingRider.getRiderStatus().toString());
+//        response.setPickupStatus(pickupRequest.getStatus().toString())
+
+
         return null;
     }
 
-//    @Override
-//    public CheckRiderAvailabilityResponse checkRiderAvailability(CheckRiderAvailabilityRequest request) {
-//        Rider rider = riderRepository.findRiderByEmail(validateEmail(request.getRiderEmail().toLowerCase()));
-//        if (rider == null) {
-//            throw new RiderNotFoundException("Rider not found");
-//        }
-//        if (rider.isAvailable()) {
-//
-//        }
-//        CheckRiderAvailabilityResponse response = new CheckRiderAvailabilityResponse();
-//        response.setMessage("Rider available");
-//        return response;
-
-//    }
 
     @Override
     public UpdateRiderResponse update(UpdateRiderRequest request) {
@@ -89,6 +105,11 @@ public class RiderServiceImpl implements RiderService{
 
         response.setRiderStatus(updatedRider.getRiderStatus().toString());
         return response;
+    }
+
+    @Override
+    public DeleteRiderResponse delete(DeleteRiderRequest request) {
+        return null;
     }
 
 
