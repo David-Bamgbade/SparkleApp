@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UpdateCustomerOrderRequest {
+    private Long orderId;
     private String firstName;
     private String lastName;
     private String email;
@@ -14,4 +15,5 @@ public class UpdateCustomerOrderRequest {
     private String homeAddress;
     private String specialInstructions;
     private LocalDateTime updatedAt;
+
 }

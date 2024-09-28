@@ -9,5 +9,4 @@ public class SparkleAppApplication {
     public static void main(String[] args) {
         SpringApplication.run(SparkleAppApplication.class, args);
     }
-
 }

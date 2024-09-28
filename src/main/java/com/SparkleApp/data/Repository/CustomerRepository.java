@@ -7,13 +7,20 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-    Optional<Customer> existsByEmail(String email);
-    
+
+    Optional<Customer> findByEmail(String email);
+
     List<Customer> findCustomerByFirstName(String firstName);
 
     List<Customer> findCustomerByLastName(String lastName);
+
+
+    boolean existsByPassword(String password);
+
+    Customer findCustomerOrderByEmail(String email);
 
 }
 
