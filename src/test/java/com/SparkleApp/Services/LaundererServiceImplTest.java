@@ -20,11 +20,11 @@ class LaundererServiceImplTest {
     public void testToSignUpLaunderer(){
         SignUpLaundererRequest request = new SignUpLaundererRequest();
         request.setFirstName("Dee");
-        request.setLastName("Bams");
-        request.setEmail("bamss@gmail.com");
-        request.setPassword("pass");
-        request.setPhoneNumber("08162488242");
-        request.setConfirmPassword("pass");
+        request.setLastName("Bamzi");
+        request.setEmail("dee@gmail.com");
+        request.setPassword("passd");
+        request.setPhoneNumber("08168488242");
+        request.setConfirmPassword("passd");
         request.setLoggedIn(false);
         SignUpLaundererResponse response = laundererService.signUp(request);
         response.setMessage("Sign up successful");
@@ -52,12 +52,20 @@ class LaundererServiceImplTest {
     @Test
     public void testThatLaundererCanLogin(){
         LoginLaundererRequest request = new LoginLaundererRequest();
-        request.setEmail("mfon@gmail.com");
-        request.setPassword("oscker");
-        laundererService.loginLaunderer(request);
+        request.setEmail("dee@gmail.com");
+        request.setPassword("passd");
         LoginLaundererResponse response = laundererService.loginLaunderer(request);
         response.setLoggedIn(true);
         assertTrue(response.isLoggedIn());
+    }
+
+    @Test
+    public void testThatLaundererCanLogout(){
+        LaundererLogoutRequest request = new LaundererLogoutRequest();
+        request.setEmail("dee@gmail.com");
+        request.setPassword("passd");
+        boolean response = laundererService.logoutLaunderer(request);
+        assertFalse(response);
     }
 
     @Test
@@ -80,10 +88,10 @@ class LaundererServiceImplTest {
     public void testThatLaundererCanPostAddOnMarketPlace(){
         LaundererPostAdRequest request = new LaundererPostAdRequest();
         VerifyEmailRequest request1 = new VerifyEmailRequest();
-        request1.setEmail("mfon@gmail.com");
+        request1.setEmail("dee@gmail.com");
         request.setImageLink("llm");
         request.setCompanyAddress("3rd-street");
-        request.setCompanyName("squeaky-clean");
+        request.setCompanyName("clean-place");
         request.setNameOfItem("shirt");
         request.setServiceDescription("wash and iron");
         request.setPriceOfItem(200);
@@ -92,6 +100,23 @@ class LaundererServiceImplTest {
         response.setMessage("post added");
         assertEquals(response.getMessage(), "post added");
     }
+
+    @Test
+    public void testThatLaundererCanDeletePostOnMarketplace(){
+        LaundererDeleteAdRequest request = new LaundererDeleteAdRequest();
+        VerifyEmailRequest request1 = new VerifyEmailRequest();
+        request1.setEmail("dee@gmail.com");
+        CompanyNameRequestOnly request2 = new CompanyNameRequestOnly();
+        request2.setCompanyName("clean-place");
+        LaundererDeletePostResponse response = laundererService.laundererDeletePost(request1, request2);
+        response.setMessage("post deleted");
+        assertEquals(response.getMessage(), "post deleted");
+    }
+
+
+
+
+
 
 
 

@@ -59,9 +59,6 @@ class LaundererMarketServiceTest {
         UpdateLaundryMarketPostRequest updateLaundryMarketPostRequest = getUpdateLaundryMarketPostRequest();
         UpdateLaundryMarketPostResponse marketPostResponse = laundererMarketService.updatePost(updateLaundryMarketPostRequest);
         assertThat(marketPostResponse.getMessage()).contains("Post updated successfully");
-
-
-
     }
 
     private static UpdateLaundryMarketPostRequest getUpdateLaundryMarketPostRequest() {
@@ -93,4 +90,8 @@ class LaundererMarketServiceTest {
         DeleteLaundryMarketPostResponse marketPostResponse = laundererMarketService.deletePost(id);
         assertThat(marketPostResponse.getMessage()).contains("Delete successfully");
     }
+
+
+
+
 }

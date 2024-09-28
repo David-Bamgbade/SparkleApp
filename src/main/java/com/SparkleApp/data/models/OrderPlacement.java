@@ -33,7 +33,4 @@ public class OrderPlacement {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-
-
-
 }

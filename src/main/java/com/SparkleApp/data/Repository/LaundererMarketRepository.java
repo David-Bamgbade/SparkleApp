@@ -22,4 +22,6 @@ public interface LaundererMarketRepository extends JpaRepository<LaundryMarket, 
 
     boolean existsByService(ServiceType service);
 
+    LaundryMarket findLaundryMarketByCompanyName(String companyName);
+
 }
