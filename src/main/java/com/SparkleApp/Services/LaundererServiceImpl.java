@@ -53,17 +53,17 @@ public class LaundererServiceImpl implements LaundererService{
 
     @Override
     public LoginLaundererResponse loginLaunderer(LoginLaundererRequest request) {
-        LoginLaundererResponse response = new LoginLaundererResponse();
          Launderer launderer = laundererRepository.findByEmailAndPassword(validateEmail(request.getEmail()).toLowerCase(), validatePassword(request.getPassword()).toLowerCase());
          if(launderer != null){
              launderer.setLoggedIn(true);
-             request.setLoggedIn(request.getLoggedIn());
-             response.setLoggedIn(true);
              laundererRepository.save(launderer);
          }
          else {
              throw new IllegalArgumentException("Invalid email or password");
          }
+        LoginLaundererResponse response = new LoginLaundererResponse();
+         response.setLoggedIn(true);
+         response.setMessage("Successfully logged in");
         return response;
     }
 
@@ -108,7 +108,6 @@ public class LaundererServiceImpl implements LaundererService{
             }
         }
 
-
     @Override
     public LaundererSendResponse laundererSendPackage(LaundererSendRequest request) {
         LaundererSendResponse response = new LaundererSendResponse();
@@ -124,7 +123,7 @@ public class LaundererServiceImpl implements LaundererService{
         order.setCompanyAddress(validateAddress(request.getCompanyAddress()).toLowerCase());
         order.setCompanyName(validateInput(request.getCompanyName().toLowerCase()));
         order.setCompanyPhoneNumber(validatePhoneNumber(String.valueOf(request.getCompanyPhoneNumber())));
-        order.setOrderDescription(validateInput(request.getOrderDescription().toLowerCase()));
+        order.setOrderDescription(validateAddress(request.getOrderDescription().toLowerCase()));
         order.setCreatedAt(LocalDateTime.now());
         orderPlacementRepository.save(order);
         response.setMessage("Order Sent To Rider");
@@ -148,7 +147,6 @@ public class LaundererServiceImpl implements LaundererService{
             LaundererPostAdResponse response = new LaundererPostAdResponse();
             LaundryMarket market = new LaundryMarket();
             market.setCompanyName(validateInput(findByLaundererPhoneNumber(request.getCompanyName())).toLowerCase());
-            market.setPriceForServiceOfItem(request.getPriceForServiceOfItem());
             market.setCompanyAddress(validateAddress(request.getCompanyAddress()).toLowerCase());
             market.setImageLink(request.getImageLink());
             market.setCreatedAt(LocalDateTime.now());

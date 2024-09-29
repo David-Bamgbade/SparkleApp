@@ -9,15 +9,12 @@ import java.time.LocalDateTime;
 public class LaundererPostAdRequest {
     private String companyName;
     private String companyAddress;
-    private String item;
     private long priceOfService;
-    private String string;
-    private long priceForServiceOfItem;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private long priceOfItem;
     private String nameOfItem;
     private String serviceDescription;
     private String imageLink;
     private String companyPhoneNumber;
+    private VerifyEmailRequest verifyEmailRequest;
 }

@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -15,6 +13,10 @@ class LaundererServiceImplTest {
 
     @Autowired
     private LaundererService laundererService;
+
+    @Autowired
+    private CustomerService customerService;
+
 
     @Test
     public void testToSignUpLaunderer(){
@@ -55,7 +57,6 @@ class LaundererServiceImplTest {
         request.setEmail("dee@gmail.com");
         request.setPassword("passd");
         LoginLaundererResponse response = laundererService.loginLaunderer(request);
-        response.setLoggedIn(true);
         assertTrue(response.isLoggedIn());
     }
 
