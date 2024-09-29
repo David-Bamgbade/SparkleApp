@@ -16,5 +16,5 @@ public class LaundererPostAdRequest {
     private String serviceDescription;
     private String imageLink;
     private String companyPhoneNumber;
-    private VerifyEmailRequest verifyEmailRequest;
+    private  String laundererEmailAddress;
 }

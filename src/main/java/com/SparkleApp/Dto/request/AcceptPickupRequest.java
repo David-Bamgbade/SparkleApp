@@ -12,4 +12,5 @@ public class AcceptPickupRequest {
     private String customerPhoneNumber;
     private String customerEmail;
     private String Esther;
+    private String riderEmail;
 }

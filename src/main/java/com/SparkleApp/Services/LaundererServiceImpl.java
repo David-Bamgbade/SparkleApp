@@ -141,8 +141,8 @@ public class LaundererServiceImpl implements LaundererService{
         return response;
     }
 
-    public LaundererPostAdResponse laundererPostAd(LaundererPostAdRequest request, VerifyEmailRequest request2) {
-        Launderer launderer = laundererRepository.findByEmail(request2.getEmail().toLowerCase());
+    public LaundererPostAdResponse laundererPostAd(LaundererPostAdRequest request) {
+        Launderer launderer = laundererRepository.findByEmail(validateEmail(request.getLaundererEmailAddress().toLowerCase()));
         if (launderer.getLoggedIn()) {
             LaundererPostAdResponse response = new LaundererPostAdResponse();
             LaundryMarket market = new LaundryMarket();
@@ -170,30 +170,31 @@ public class LaundererServiceImpl implements LaundererService{
         }
     }
 
-   public LaundererDeletePostResponse laundererDeletePost(VerifyEmailRequest request2, CompanyNameRequestOnly companyName){
-     LaundererDeletePostResponse response = new LaundererDeletePostResponse();
-       Launderer launderer = laundererRepository.findByEmail(request2.getEmail().toLowerCase());
-       if (launderer.getLoggedIn()) {
-           LaundryMarket market = laundererMarketRepository.findLaundryMarketByCompanyName(validateAddress(companyName.getCompanyName()).toLowerCase());
-           laundererMarketRepository.delete(market);
-       }
-       response.setMessage("Post Deleted");
-     return response;
-    }
+//   public LaundererDeletePostResponse laundererDeletePost(VerifyEmailRequest request2, CompanyNameRequestOnly companyName){
+//     LaundererDeletePostResponse response = new LaundererDeletePostResponse();
+//       Launderer launderer = laundererRepository.findByEmail(request2.getEmail().toLowerCase());
+//       if (launderer.getLoggedIn()) {
+//           LaundryMarket market = laundererMarketRepository.findLaundryMarketByCompanyName(validateAddress(companyName.getCompanyName()).toLowerCase());
+//           laundererMarketRepository.delete(market);
+//       }
+//       response.setMessage("Post Deleted");
+//     return response;
+//    }
 
-    public boolean logoutLaunderer(LaundererLogoutRequest logoutRequest){
-            LogoutLaundererResponse response = new LogoutLaundererResponse();
+
+    public LogoutLaundererResponse logoutLaunderer(LaundererLogoutRequest logoutRequest){
             Launderer launderer = laundererRepository.findByEmailAndPassword(validateEmail(logoutRequest.getEmail()).toLowerCase(), validateConfirmPassword(logoutRequest.getPassword()).toLowerCase());
             if(launderer != null){
                 launderer.setLoggedIn(false);
-                logoutRequest.setLoggedIn(logoutRequest.getLoggedIn());
-                response.setLoggedIn(false);
                 laundererRepository.save(launderer);
             }
             else {
                 throw new IllegalArgumentException("Invalid email or password");
             }
-            return response.isLoggedIn();
+            LogoutLaundererResponse response = new LogoutLaundererResponse();
+             response.setLoggedIn(false);
+             response.setMessage("logout successful");
+             return response;
     }
 
     private void validate(SignUpLaundererRequest request) {
