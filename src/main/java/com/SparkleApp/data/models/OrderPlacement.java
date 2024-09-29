@@ -13,11 +13,11 @@ public class OrderPlacement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private java.lang.String customerFirstName;
-    private java.lang.String customerLastName;
-    private java.lang.String customerEmail;
-    private java.lang.String customerPhoneNumber;
-    private java.lang.String customerAddress;
+    private String customerFirstName;
+    private String customerLastName;
+    private String customerEmail;
+    private String customerPhoneNumber;
+    private String customerAddress;
     private long totalServicePrice;
     private int NumberOfItems;
     private long pricePerService;
@@ -32,5 +32,4 @@ public class OrderPlacement {
     private String orderDescription;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }
