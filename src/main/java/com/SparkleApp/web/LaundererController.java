@@ -15,7 +15,6 @@ public class LaundererController {
     private LaundererService laundererService;
 
 
-
     @PostMapping("/signup")
     public ResponseEntity<?> signupLaunderer(@RequestBody SignUpLaundererRequest request){
         try {
@@ -50,28 +49,54 @@ public class LaundererController {
     }
 
     @PostMapping("/postAd")
-    public ResponseEntity<?> addPostAd(  @RequestBody LaundererPostAdRequest laundererPostAdRequest,
-                                         @RequestBody VerifyEmailRequest verifyEmailRequest){
-        try{
-            LaundererPostAdResponse response = laundererService.laundererPostAd(laundererPostAdRequest, verifyEmailRequest);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        catch (Exception exception){
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+    public ResponseEntity<?> addPostAd(@RequestBody LaundererPostAdRequest request) {
 
-
-    @DeleteMapping("/deleteAd")
-    public ResponseEntity<?> deleteLaundryAdPost(@RequestBody VerifyEmailRequest request1, CompanyNameRequestOnly request){
         try {
-            LaundererDeletePostResponse response = laundererService.laundererDeletePost(request1, request);
+            LaundererPostAdResponse response = laundererService.laundererPostAd(request);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch (Exception exception){
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/collectOrder")
+    public ResponseEntity<?> receiveOrder(@RequestBody LaundererReceiveRequest request ) {
+
+        try {
+            LaundererReceiveResponse response = laundererService.laundererReceivePackage(request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch (Exception exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/logOut")
+    public ResponseEntity<?> logOutLaunderer (@RequestBody LaundererLogoutRequest request ) {
+
+        try {
+            LogoutLaundererResponse response = laundererService.logoutLaunderer(request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch (Exception exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+
+//    @DeleteMapping("/deleteAd")
+//    public ResponseEntity<?> deleteLaundryAdPost(@RequestBody VerifyEmailRequest request1, CompanyNameRequestOnly request){
+//        try {
+//            LaundererDeletePostResponse response = laundererService.laundererDeletePost(request1, request);
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//        }
+//        catch (Exception exception){
+//            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 
 

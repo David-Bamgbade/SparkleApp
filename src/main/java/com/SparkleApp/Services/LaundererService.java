@@ -8,7 +8,7 @@ public interface LaundererService {
     LoginLaundererResponse loginLaunderer(LoginLaundererRequest request);
     LaundererReceiveResponse laundererReceivePackage(LaundererReceiveRequest request);
     LaundererSendResponse laundererSendPackage(LaundererSendRequest request);
-    LaundererDeletePostResponse laundererDeletePost(VerifyEmailRequest request2, CompanyNameRequestOnly companyName);
-    boolean logoutLaunderer(LaundererLogoutRequest request);
-    LaundererPostAdResponse laundererPostAd(LaundererPostAdRequest request, VerifyEmailRequest request1);
+//    LaundererDeletePostResponse laundererDeletePost(VerifyEmailRequest request2, CompanyNameRequestOnly companyName);
+    LogoutLaundererResponse logoutLaunderer(LaundererLogoutRequest request);
+    LaundererPostAdResponse laundererPostAd(LaundererPostAdRequest request);
 }

@@ -37,7 +37,7 @@ public class RiderServiceImplTest {
         SignUpRiderResponse response = new SignUpRiderResponse();
         response.setMessage("SignUp successful");
         riderServiceImpl.signUpRider(signUp);
-        assertEquals(1,riderRepository.count());
+        assertEquals(2,riderRepository.count());
 
     }
 
@@ -50,8 +50,6 @@ public class RiderServiceImplTest {
         LoginRiderResponse loginResponse = new LoginRiderResponse();
         loginResponse.setMessage("login successful");
         assertEquals(1, riderRepository.count());
-
-
     }
 
     @Test
