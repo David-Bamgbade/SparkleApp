@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Setter
 public class SignUpLaundererResponse {
     private String message;
-    private LocalDateTime sendAt;
-    private LocalDateTime receivedAt;
     private LocalDateTime createdAt;
 
 }
