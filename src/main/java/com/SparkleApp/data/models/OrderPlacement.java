@@ -32,5 +32,6 @@ public class OrderPlacement {
     private String orderDescription;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private OrderStatus orderStatus;
 
 }

@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class DeleteRiderRequest {
-    private String email;
-    private String password;
+public class RemoveItemsToCartRequest {
+    public Long getCartId;
+    private String itemId;
+
 }

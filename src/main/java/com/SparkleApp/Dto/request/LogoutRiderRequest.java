@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AcceptPickupRequest {
-    private Long orderId;
+public class LogoutRiderRequest {
+    private String Email;
+    private String Password;
 }
