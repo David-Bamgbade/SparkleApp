@@ -1,14 +1,9 @@
 package com.SparkleApp.Services;
 
-import com.SparkleApp.Dto.request.CheckRiderAvailabilityRequest;
-import com.SparkleApp.Dto.request.LoginRiderRequest;
-import com.SparkleApp.Dto.request.SignUpRiderRequest;
-import com.SparkleApp.Dto.request.UpdateRiderRequest;
-import com.SparkleApp.Dto.response.CheckRiderAvailabilityResponse;
-import com.SparkleApp.Dto.response.DeleteRiderResponse;
-import com.SparkleApp.Dto.response.LoginRiderResponse;
-import com.SparkleApp.Dto.response.SignUpRiderResponse;
+import com.SparkleApp.Dto.request.*;
+import com.SparkleApp.Dto.response.*;
 import com.SparkleApp.data.Repository.RiderRepository;
+import com.SparkleApp.data.models.Rider;
 import com.SparkleApp.data.models.RiderStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +32,7 @@ public class RiderServiceImplTest {
         SignUpRiderResponse response = new SignUpRiderResponse();
         response.setMessage("SignUp successful");
         riderServiceImpl.signUpRider(signUp);
-        assertEquals(2,riderRepository.count());
+        assertEquals(1,riderRepository.count());
 
     }
 
@@ -50,6 +45,8 @@ public class RiderServiceImplTest {
         LoginRiderResponse loginResponse = new LoginRiderResponse();
         loginResponse.setMessage("login successful");
         assertEquals(1, riderRepository.count());
+
+
     }
 
     @Test
@@ -64,28 +61,39 @@ public class RiderServiceImplTest {
 
     @Test
     public void pickup() {
+        AcceptPickupRequest request = new AcceptPickupRequest();
+        request.setOrderId(Long.valueOf("1"));
+
 
     }
 
     @Test
-    public void update() {
-        UpdateRiderRequest update = new UpdateRiderRequest();
-        update.setEmail("john@gmail.com");
-        update.setRiderStatus(String.valueOf(RiderStatus.ON_THE_WAY));
-        riderServiceImpl.update(update);
-//        assertTrue();
-
+    public void updateRider() {
+        UpdateRiderRequest request = new UpdateRiderRequest();
+        request.setRiderId(1L);
+        request.setRiderStatus(RiderStatus.ON_THE_WAY);
+        request.setEmail("johndeo1@gmail.com");
+        UpdateRiderResponse response = riderServiceImpl.update(request);
+        assertNotNull(response);
+        assertNotNull(response.getMessage());
     }
 
     @Test
-    public void delete() {
-        UpdateRiderRequest update = new UpdateRiderRequest();
-        update.setEmail("");
-        update.setRiderStatus("");
-        update.setRiderStatus("");
-//        riderServiceImpl.delete(update);
-        DeleteRiderResponse response = new DeleteRiderResponse();
-        response.setMessage("Deleted");
-        assertEquals(1,riderRepository.count());
+    public void logout() {
+        LogoutRiderRequest logoutRequest = new LogoutRiderRequest();
+        logoutRequest.setEmail("john@gmail.com");
+        logoutRequest.setPassword("password");
+
+        Rider rider = new Rider();
+        rider.setEmail("john@gmail.com");
+        rider.setPassword("password");
+        riderRepository.save(rider);
+
+        long initialCount = riderRepository.count();
+        LogoutRiderResponse logoutResponse = riderServiceImpl.delete(logoutRequest);
+        assertNotNull(logoutResponse);
+        assertEquals("LoggedOut Successfully", logoutResponse.getMessage());
+        assertEquals(initialCount - 1, riderRepository.count());
     }
+
 }

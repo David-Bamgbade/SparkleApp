@@ -10,6 +10,6 @@ public interface RiderService {
     CheckRiderAvailabilityResponse checkRiderAvailability(CheckRiderAvailabilityRequest request);
     AcceptPickupResponse pickup(AcceptPickupRequest request);
     UpdateRiderResponse update(UpdateRiderRequest request);
-    DeleteRiderResponse delete(DeleteRiderRequest request);
+    LogoutRiderResponse delete(LogoutRiderRequest request);
 
 }

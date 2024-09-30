@@ -87,6 +87,8 @@ public class LaundererController {
 
 
 
+
+
 //    @DeleteMapping("/deleteAd")
 //    public ResponseEntity<?> deleteLaundryAdPost(@RequestBody VerifyEmailRequest request1, CompanyNameRequestOnly request){
 //        try {
