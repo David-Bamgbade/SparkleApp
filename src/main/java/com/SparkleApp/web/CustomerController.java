@@ -14,13 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/customer/")
+@RequestMapping("/api/customer")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class CustomerController {
 
-
     private final CustomerService customerService;
-
     private final EmailService emailService;
 
 
@@ -29,8 +28,7 @@ public class CustomerController {
         try {
             SignUpCustomerResponse signUpCustomerResponse =  customerService.signupCustomer(signupCustomerRequest);
 
-            emailService.sendEmail(
-                    signupCustomerRequest.getEmail(),
+            emailService.sendEmail(signupCustomerRequest.getEmail(),
                     "Welcome to Sparkle Marketplace ",
                     STR."Hello \{signupCustomerRequest.getFirstName()}\n Welcome to sparkle Marketplace! We're thrilled to have you on board.\n Thank you for choosing us for your laundry needs. We are committed to providing you with the best service possible.");
 
@@ -42,7 +40,7 @@ public class CustomerController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginCustomer(@RequestBody LoginCustomerRequest loginCustomerRequest){
         try {
             LoginCustomerResponse loginCustomerResponse = customerService.loginCustomer(loginCustomerRequest);
@@ -55,7 +53,7 @@ public class CustomerController {
         }
     }
 
-    @PostMapping("placeOrder")
+    @PostMapping("/placeOrder")
     public ResponseEntity<?> placeOrder(@RequestBody SendCustomerOrderRequest sendCustomerOrderRequest){
         try {
             SendCustomerOrderResponse sendCustomerOrderResponse = customerService.sendOrder(sendCustomerOrderRequest);
