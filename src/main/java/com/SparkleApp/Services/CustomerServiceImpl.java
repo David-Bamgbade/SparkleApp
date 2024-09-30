@@ -11,24 +11,27 @@ import com.SparkleApp.data.Repository.OrderPlacementRepository;
 import com.SparkleApp.data.models.Customer;
 import com.SparkleApp.data.models.OrderPlacement;
 import com.SparkleApp.exception.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.SparkleApp.utils.Mapper.*;
 
-
 @Service
 public class CustomerServiceImpl implements CustomerService {
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private CustomerRepository customerRepository;
+
     @Autowired
     private OrderPlacementRepository orderPlacementRepository;
+
+    @Autowired
+    private  EmailService emailService;
 
 
     @Override
@@ -50,7 +53,6 @@ public class CustomerServiceImpl implements CustomerService {
             return signUpCustomerResponseMapper(customer);
         }
     }
-
     private void validateEmail(String email) {
         for (Customer customerEmail: customerRepository.findAll()) {
             if (customerEmail.getEmail().equals(email)) {
@@ -58,7 +60,6 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
     }
-
     private boolean isValueIsNullOrEmpty(String value) {
         return value == null  || value.trim().isEmpty();
     }

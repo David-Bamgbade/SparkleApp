@@ -6,10 +6,13 @@ import com.SparkleApp.Dto.response.SendCustomerOrderResponse;
 import com.SparkleApp.Dto.response.SignUpCustomerResponse;
 import com.SparkleApp.Dto.response.UpdateCustomerOrderResponse;
 import com.SparkleApp.data.models.Customer;
+import com.SparkleApp.data.models.Email;
 import com.SparkleApp.data.models.LaundryMarket;
 import com.SparkleApp.exception.InvalidEmailException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Mapper {
+
 
 
     public static void signupCustomerMapper(SignupCustomerRequest signupCustomerRequest, Customer customer) {
@@ -18,13 +21,16 @@ public class Mapper {
         customer.setEmail(signupCustomerRequest.getEmail());
         customer.setPhoneNumber(signupCustomerRequest.getPhoneNumber());
         customer.setPassword(signupCustomerRequest.getPassword());
-        if (signupCustomerRequest.getEmail().contains("@") ) {
-            throw new InvalidEmailException("Missing @ in your email");
+//        if (signupCustomerRequest.getEmail().contains("@") ) {
+//            throw new InvalidEmailException("Missing @ in your email");
+//
+//        }
+//            if (signupCustomerRequest.getEmail().contains(".")) {
+//                throw new InvalidEmailException("Missing . in your email");
+//            }
 
-        }
-        if (signupCustomerRequest.getEmail().contains(".")) {
-            throw new InvalidEmailException("Missing . in your email");
-        }
+
+
     }
     public static SignUpCustomerResponse signUpCustomerResponseMapper(Customer customer) {
         SignUpCustomerResponse signUpCustomerResponse = new SignUpCustomerResponse();
