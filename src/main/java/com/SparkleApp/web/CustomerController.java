@@ -19,8 +19,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class CustomerController {
 
+<<<<<<< HEAD
     private final CustomerService customerService;
     private final EmailService emailService;
+=======
+    public final CustomerService customerService;
+>>>>>>> 208bc202dc8ce3e7a19cd3b92f361f0037215e57
 
 
     @PostMapping("/signup")

@@ -1,11 +1,10 @@
 package com.SparkleApp.Dto.request;
 
-import com.SparkleApp.data.models.ItemType;
 import com.SparkleApp.data.models.Payment;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,11 +14,18 @@ public class LaundererSendRequest {
     private String customerPhoneNumber;
     private String customerAddress;
     private String companyName;
-    private String companyNumber;
-    private String nameOfItems;
+    private String companyPhoneNumber;
+    private String[] nameOfItems;
     private long totalPrice;
     private boolean paymentStatus;
     private int numberOfItems;
     private Payment customerPayment;
+    private String orderDescription;
+    private String companyAddress;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
+    public String[] setNameOfItems(String... items) {
+        return items;
+    }
 }

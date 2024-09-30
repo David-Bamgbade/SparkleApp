@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -20,13 +22,16 @@ public class OrderPlacement {
     private int NumberOfItems;
     private long pricePerService;
     private boolean paymentStatus;
-    private String servicePerItem;
-    @Enumerated(EnumType.STRING)
-    private ServiceType service;
-    @Enumerated(EnumType.STRING)
-    private ItemType item;
+    private long customerPayment;
+    private String serviceDescription;
+    private String nameOfItems;
     private long orderId;
     private String companyAddress;
     private String companyName;
     private String companyPhoneNumber;
+    private String orderDescription;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private OrderStatus orderStatus;
+
 }

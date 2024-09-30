@@ -1,15 +1,14 @@
 package com.SparkleApp.data.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Setter
 @Getter
+@ToString
 public class Rider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +21,11 @@ public class Rider {
     private String password;
     private String confirmPassword;
     private boolean isAvailable;
-    private String riderStatus;
+//    private String riderStatus;
+
+    @Enumerated(EnumType.STRING)
+    private RiderStatus riderStatus;
+
 
 
 }

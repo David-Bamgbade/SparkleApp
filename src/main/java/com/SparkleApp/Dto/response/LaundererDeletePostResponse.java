@@ -3,14 +3,9 @@ package com.SparkleApp.Dto.response;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
-@Getter
 @Setter
-public class SignUpLaundererResponse {
+@Getter
+public class LaundererDeletePostResponse {
     private String message;
-    private LocalDateTime createdAt;
 
 }
-
-

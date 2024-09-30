@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 @Repository
 public interface LaundererMarketRepository extends JpaRepository<LaundryMarket, Long> {
 
@@ -20,5 +21,7 @@ public interface LaundererMarketRepository extends JpaRepository<LaundryMarket, 
     boolean existsByCompanyPhoneNumber(String companyPhoneNumber);
 
     boolean existsByService(ServiceType service);
+
+    LaundryMarket findLaundryMarketByCompanyName(String companyName);
 
 }

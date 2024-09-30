@@ -4,10 +4,10 @@ import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
-public class LoginLaundererResponse {
-    private String message;
+@Getter
+public class LogoutLaundererResponse {
     @Column(name = "is_logged_in")
-    private boolean isLoggedIn;
+    private boolean loggedIn;
+    private String message;
 }
