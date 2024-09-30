@@ -23,6 +23,7 @@ public class OrderPlacementServiceImpl implements OrderPlacementService {
     public CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest) {
         OrderPlacement orderPlacement = new OrderPlacement();
         orderPlacement.setPickUpDate(createOrderRequest.getPickUpDate());
+
         orderPlacement.setDeliveryDate(createOrderRequest.getDeliveryDate());
         orderPlacement.setOrderDate(createOrderRequest.getOrderDate());
         orderPlacement.setTotalCost(createOrderRequest.getTotalCost());

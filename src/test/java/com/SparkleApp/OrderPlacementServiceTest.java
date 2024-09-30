@@ -11,7 +11,6 @@ import com.SparkleApp.data.models.OrderPlacement;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -51,7 +50,6 @@ public class OrderPlacementServiceTest {
         assertEquals("Order Placed Successfully", response.getMessage());
         DeleteOrderRequest request2 = new DeleteOrderRequest();
         request2.setOrderId(response.getId());
-//        request2.setCustomerId(response.getCustomerId());
         DeleteOrderResponse response2 = orderPlacementService.deleteOrder(request2.getOrderId());
         assertEquals("Order Deleted Successfully", response2.getMessage());
 

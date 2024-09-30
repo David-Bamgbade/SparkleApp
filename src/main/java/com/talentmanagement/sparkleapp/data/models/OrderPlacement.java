@@ -33,5 +33,6 @@ public class OrderPlacement {
     }
 
     public Long getCustomerId() {
+        return null;
     }
 }
