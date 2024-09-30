@@ -1,5 +1,6 @@
 package com.SparkleApp.Dto.request;
 
+import com.SparkleApp.data.models.RiderStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,7 @@ import lombok.Setter;
 @Getter
 public class UpdateRiderRequest {
     private Long riderId;
-    private String RiderStatus;
+    private RiderStatus riderStatus;
     private String email;
 
 }

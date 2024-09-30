@@ -1,9 +1,6 @@
-package com.SparkleApp.controllers;
+package com.SparkleApp.web;
 
-import com.SparkleApp.Dto.request.DeleteRiderRequest;
-import com.SparkleApp.Dto.request.LoginRiderRequest;
-import com.SparkleApp.Dto.request.SignUpRiderRequest;
-import com.SparkleApp.Dto.request.UpdateRiderRequest;
+import com.SparkleApp.Dto.request.*;
 import com.SparkleApp.Dto.response.*;
 import com.SparkleApp.Services.RiderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +43,27 @@ public class RiderController {
         }
     }
 
+    @PostMapping("/CheckRiderAvailability")
+    public ResponseEntity<?> checkRiderAvailability(@RequestBody CheckRiderAvailabilityRequest checkRiderAvailabilityRequest) {
+        try {
+            CheckRiderAvailabilityResponse result = riderService.checkRiderAvailability(checkRiderAvailabilityRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/AcceptPickup")
+    public ResponseEntity<?> acceptPickup(@RequestBody AcceptPickupRequest acceptPickupRequest) {
+        try {
+            AcceptPickupResponse result = riderService.pickup(acceptPickupRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
+        }
+    }
+
+
     @PostMapping("/Update")
     public ResponseEntity<?> update(@RequestBody UpdateRiderRequest updateRequest) {
         try {
@@ -59,15 +77,16 @@ public class RiderController {
     }
 
 
-    @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody DeleteRiderRequest deleteRiderRequest) {
+    @PostMapping("/Logout")
+    public ResponseEntity<?> delete(@RequestBody LogoutRiderRequest logoutRiderRequest) {
         try {
-            DeleteRiderResponse result = riderService.delete(deleteRiderRequest);
+            LogoutRiderResponse result = riderService.delete(logoutRiderRequest);
             return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
         } catch (Exception exception) {
 
             return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
         }
+
     }
 
 }

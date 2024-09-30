@@ -5,6 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AcceptPickupRequest {
-    private Long orderId;
+public class CheckoutRequest {
+    private String cartId;
+    private String totalAmount;
+
 }
