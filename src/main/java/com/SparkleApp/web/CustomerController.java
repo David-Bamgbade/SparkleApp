@@ -23,7 +23,6 @@ public class CustomerController {
     private final EmailService emailService;
 
 
-
     @PostMapping("/signup")
     public ResponseEntity<?> signupCustomer(@RequestBody SignupCustomerRequest signupCustomerRequest){
         try {

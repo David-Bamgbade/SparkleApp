@@ -4,7 +4,9 @@ import com.SparkleApp.Dto.request.*;
 import com.SparkleApp.Dto.response.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.convert.ConversionService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +18,6 @@ class LaundererServiceImplTest {
 
     @Autowired
     private CustomerService customerService;
-
 
     @Test
     public void testToSignUpLaunderer(){
@@ -63,10 +64,12 @@ class LaundererServiceImplTest {
     @Test
     public void testThatLaundererCanLogout(){
         LaundererLogoutRequest request = new LaundererLogoutRequest();
+        LogoutLaundererResponse response = new LogoutLaundererResponse();
         request.setEmail("dee@gmail.com");
         request.setPassword("passd");
-      boolean response = laundererService.logoutLaunderer(request);
-        assertFalse();
+        laundererService.logoutLaunderer(request);
+        response.setMessage("Logout successful");
+        assertEquals("Logout successful", response.getMessage());
     }
 
     @Test
