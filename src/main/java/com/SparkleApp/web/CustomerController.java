@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class CustomerController {
 
-
     private final CustomerService customerService;
     private final EmailService emailService;
 
