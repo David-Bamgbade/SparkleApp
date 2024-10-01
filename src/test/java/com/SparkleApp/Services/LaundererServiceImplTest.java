@@ -65,8 +65,8 @@ class LaundererServiceImplTest {
         LaundererLogoutRequest request = new LaundererLogoutRequest();
         request.setEmail("dee@gmail.com");
         request.setPassword("passd");
-        boolean response = laundererService.logoutLaunderer(request);
-        assertFalse(response);
+      boolean response = laundererService.logoutLaunderer(request);
+        assertFalse();
     }
 
     @Test
@@ -112,10 +112,6 @@ class LaundererServiceImplTest {
 //        response.setMessage("post deleted");
 //        assertEquals(response.getMessage(), "post deleted");
 //    }
-
-
-
-
 
 
 
