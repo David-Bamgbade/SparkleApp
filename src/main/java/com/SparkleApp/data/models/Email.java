@@ -10,5 +10,4 @@ import org.springframework.stereotype.Component;
 public class Email {
     private String emailTitle;
     private String message;
-
 }
