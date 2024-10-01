@@ -34,6 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
     private  EmailService emailService;
 
 
+
     @Override
     public SignUpCustomerResponse signupCustomer(SignupCustomerRequest signupCustomerRequest) {
 
@@ -101,6 +102,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public SendCustomerOrderResponse sendOrder(SendCustomerOrderRequest sendCustomerOrderRequest) {
         Customer customer = new Customer();
+//        OrderPlacement orderPlacement = orderPlacementRepository.findByOrderId(ccustomer.getId())
         if (isValueIsNullOrEmpty(sendCustomerOrderRequest.getFirstName())||
                 isValueIsNullOrEmpty(sendCustomerOrderRequest.getLastName())||
                 isValueIsNullOrEmpty(sendCustomerOrderRequest.getEmail())||
@@ -120,7 +122,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public UpdateCustomerOrderResponse updateOrder(UpdateCustomerOrderRequest customerOrderRequest) {
         Customer customer = findCustomerByEmail(customerOrderRequest.getEmail());
-
         OrderPlacement order = orderPlacementRepository.findByOrderId(customerOrderRequest.getOrderId());
 
         if (isValueIsNullOrEmpty(customerOrderRequest.getFirstName())||
