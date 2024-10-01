@@ -91,7 +91,6 @@ class LaundererMarketServiceTest {
         assertThat(marketPostResponse.getMessage()).contains("Delete successfully");
     }
 
-
-
+    
 
 }
