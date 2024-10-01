@@ -67,7 +67,7 @@ public class RiderServiceImpl implements RiderService{
        if (rider == null) {
             throw new RiderNotFoundException("Rider not found");
        }
-       if (rider.isAvailable()) {
+       if (!rider.isAvailable()) {
            throw new RiderNotAvailableException("Rider is not available");
        }
         CheckRiderAvailabilityResponse response = new CheckRiderAvailabilityResponse();

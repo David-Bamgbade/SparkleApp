@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
+<<<<<<< HEAD
+=======
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -26,4 +28,5 @@ public class EmailService {
     }
 
 
+>>>>>>> 6bf40974540665f885c98a55588f02c331bca001
 }

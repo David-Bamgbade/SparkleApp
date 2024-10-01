@@ -45,7 +45,6 @@ public class CustomerServiceImpl implements CustomerService {
                 isValueIsNullOrEmpty(signupCustomerRequest.getEmail()) ||
                 isValueIsNullOrEmpty(signupCustomerRequest.getPhoneNumber()) ||
                 isValueIsNullOrEmpty(signupCustomerRequest.getPassword())) {
-
             throw new EmptyFeildsException("Please enter all the fields");
         }else {
             customer.setPassword(passwordEncoder.encode(signupCustomerRequest));
@@ -139,7 +138,6 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(customer);
         return Mapper(customer);
     }
-
 
     @Override
     public DeleteSenderOrderResponse deleteOrder(Long id) {
