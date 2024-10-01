@@ -13,5 +13,4 @@ public class Email {
     private Long id;
     private String headTitle;
     private String message;
-
 }
